@@ -1,0 +1,4169 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+Raport Integrasi | Pondok Modern Al-Ghozali
+</title>
+
+
+<!-- =========================================================
+     SHEETJS
+     Untuk membaca dan membuat file Excel
+========================================================= -->
+
+<script
+  src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+</script>
+
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+
+  --primary:#0f766e;
+  --primary2:#14b8a6;
+  --dark:#064e3b;
+
+  --bg:#f5f8f8;
+  --white:#ffffff;
+
+  --text:#172033;
+  --muted:#64748b;
+
+  --border:#e2e8f0;
+
+  --success:#15803d;
+  --danger:#dc2626;
+  --warning:#b45309;
+
+}
+
+
+body{
+
+  font-family:
+    Inter,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+
+  color:var(--text);
+
+  min-height:100vh;
+
+  background:
+
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(20,184,166,.14),
+      transparent 32%
+    ),
+
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(15,118,110,.10),
+      transparent 28%
+    ),
+
+    var(--bg);
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+
+  position:sticky;
+
+  top:0;
+
+  z-index:100;
+
+  color:white;
+
+  background:
+
+    linear-gradient(
+      135deg,
+      #064e3b,
+      #0f766e 55%,
+      #115e59
+    );
+
+  box-shadow:
+    0 10px 30px
+    rgba(6,78,59,.18);
+
+}
+
+
+.header-inner{
+
+  max-width:1200px;
+
+  margin:auto;
+
+  min-height:78px;
+
+  padding:
+    12px 20px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:20px;
+
+}
+
+
+.brand{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+}
+
+
+.logo{
+
+  width:52px;
+
+  height:52px;
+
+  border-radius:16px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-size:17px;
+
+  font-weight:900;
+
+  background:
+    rgba(255,255,255,.12);
+
+  border:
+    1px solid
+    rgba(255,255,255,.22);
+
+}
+
+
+.brand-title{
+
+  font-size:19px;
+
+  font-weight:900;
+
+}
+
+
+.brand-subtitle{
+
+  margin-top:3px;
+
+  font-size:12px;
+
+  opacity:.78;
+
+}
+
+
+.year-badge{
+
+  padding:
+    9px 15px;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.10);
+
+  border:
+    1px solid
+    rgba(255,255,255,.18);
+
+  font-size:12px;
+
+  font-weight:700;
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+
+  max-width:1200px;
+
+  margin:auto;
+
+  padding:
+    32px 20px
+    60px;
+
+}
+
+
+.welcome{
+
+  margin-bottom:24px;
+
+}
+
+
+.welcome h1{
+
+  font-size:28px;
+
+  font-weight:900;
+
+}
+
+
+.welcome p{
+
+  margin-top:7px;
+
+  color:var(--muted);
+
+  font-size:14px;
+
+}
+
+
+/* =========================================================
+   STEPS
+========================================================= */
+
+.steps{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:12px;
+
+  margin-bottom:22px;
+
+}
+
+
+.step{
+
+  background:
+    rgba(255,255,255,.9);
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:16px;
+
+  padding:13px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:11px;
+
+}
+
+
+.step.active{
+
+  border-color:
+    rgba(15,118,110,.35);
+
+  background:
+    #f0fdfa;
+
+}
+
+
+.step-number{
+
+  width:36px;
+
+  height:36px;
+
+  border-radius:11px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:#e2e8f0;
+
+  color:#64748b;
+
+  font-weight:900;
+
+  font-size:13px;
+
+}
+
+
+.step.active
+.step-number{
+
+  background:
+    var(--primary);
+
+  color:white;
+
+}
+
+
+.step-title{
+
+  color:var(--muted);
+
+  font-size:10px;
+
+}
+
+
+.step-name{
+
+  margin-top:2px;
+
+  font-size:13px;
+
+  font-weight:800;
+
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card{
+
+  background:
+    rgba(255,255,255,.96);
+
+  border:
+    1px solid
+    rgba(226,232,240,.9);
+
+  border-radius:22px;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 20px 55px
+    rgba(15,23,42,.08);
+
+}
+
+
+.card-header{
+
+  padding:
+    23px 25px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+
+}
+
+
+.card-header h2{
+
+  font-size:18px;
+
+  font-weight:850;
+
+}
+
+
+.card-header p{
+
+  margin-top:5px;
+
+  color:var(--muted);
+
+  font-size:13px;
+
+}
+
+
+.card-body{
+
+  padding:25px;
+
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:18px;
+
+}
+
+
+.form-group label{
+
+  display:block;
+
+  margin-bottom:8px;
+
+  color:#334155;
+
+  font-size:13px;
+
+  font-weight:800;
+
+}
+
+
+select{
+
+  width:100%;
+
+  height:50px;
+
+  padding:
+    0 14px;
+
+  border:
+    1px solid
+    #cbd5e1;
+
+  border-radius:13px;
+
+  outline:none;
+
+  background:white;
+
+  color:#0f172a;
+
+  font-size:14px;
+
+}
+
+
+select:focus{
+
+  border-color:
+    var(--primary);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(15,118,110,.10);
+
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.actions{
+
+  margin-top:22px;
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+}
+
+
+.btn{
+
+  min-height:44px;
+
+  padding:
+    0 19px;
+
+  border:0;
+
+  border-radius:12px;
+
+  font-size:13px;
+
+  font-weight:850;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+}
+
+
+.btn:hover{
+
+  transform:
+    translateY(-1px);
+
+}
+
+
+.btn-primary{
+
+  color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--primary2)
+    );
+
+}
+
+
+.btn-secondary{
+
+  background:#f1f5f9;
+
+  color:#334155;
+
+}
+
+
+.btn-excel{
+
+  background:#166534;
+
+  color:white;
+
+}
+
+
+.btn-danger{
+
+  background:#fee2e2;
+
+  color:#991b1b;
+
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info-box{
+
+  margin-top:20px;
+
+  padding:
+    16px 18px;
+
+  border-radius:14px;
+
+  background:#f0fdfa;
+
+  border:
+    1px solid
+    #ccfbf1;
+
+  color:#115e59;
+
+  font-size:13px;
+
+  line-height:1.65;
+
+}
+
+
+.info-title{
+
+  font-weight:900;
+
+  margin-bottom:4px;
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+
+  display:none;
+
+  margin-top:22px;
+
+  padding:
+    38px 20px;
+
+  text-align:center;
+
+}
+
+
+.spinner{
+
+  width:40px;
+
+  height:40px;
+
+  margin:auto;
+
+  border:
+    4px solid
+    #ccfbf1;
+
+  border-top-color:
+    var(--primary);
+
+  border-radius:50%;
+
+  animation:
+    spin .8s linear infinite;
+
+}
+
+
+@keyframes spin{
+
+  to{
+    transform:rotate(360deg);
+  }
+
+}
+
+
+.loading-text{
+
+  margin-top:13px;
+
+  color:var(--muted);
+
+  font-size:13px;
+
+}
+
+
+/* =========================================================
+   MAPEL
+========================================================= */
+
+#mapelSection{
+
+  display:none;
+
+  margin-top:22px;
+
+}
+
+
+.mapel-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(210px,1fr)
+    );
+
+  gap:12px;
+
+}
+
+
+.mapel-item{
+
+  min-height:108px;
+
+  padding:16px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:15px;
+
+  background:white;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+}
+
+
+.mapel-item:hover{
+
+  border-color:
+    rgba(15,118,110,.5);
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 10px 24px
+    rgba(15,23,42,.07);
+
+}
+
+
+.mapel-item.selected{
+
+  background:#f0fdfa;
+
+  border-color:
+    var(--primary);
+
+}
+
+
+.mapel-number{
+
+  width:31px;
+
+  height:31px;
+
+  border-radius:9px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:#ccfbf1;
+
+  color:var(--primary);
+
+  font-size:12px;
+
+  font-weight:900;
+
+  margin-bottom:12px;
+
+}
+
+
+.mapel-name{
+
+  font-size:14px;
+
+  line-height:1.45;
+
+  font-weight:800;
+
+}
+
+
+/* =========================================================
+   NILAI
+========================================================= */
+
+#nilaiSection{
+
+  display:none;
+
+  margin-top:22px;
+
+}
+
+
+.nilai-toolbar{
+
+  padding:
+    18px 22px;
+
+  background:#f8fafc;
+
+  border-bottom:
+    1px solid
+    var(--border);
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+
+}
+
+
+.nilai-title{
+
+  font-size:17px;
+
+  font-weight:900;
+
+}
+
+
+.nilai-subtitle{
+
+  margin-top:4px;
+
+  color:var(--muted);
+
+  font-size:12px;
+
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper{
+
+  overflow-x:auto;
+
+}
+
+
+table{
+
+  width:100%;
+
+  min-width:750px;
+
+  border-collapse:collapse;
+
+}
+
+
+thead th{
+
+  background:#f8fafc;
+
+  color:#475569;
+
+  font-size:11px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.4px;
+
+  font-weight:850;
+
+}
+
+
+th,
+td{
+
+  padding:
+    13px 15px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+
+}
+
+
+tbody tr:hover{
+
+  background:#f8fafc;
+
+}
+
+
+th:first-child,
+td:first-child{
+
+  width:65px;
+
+  text-align:center;
+
+}
+
+
+th:last-child,
+td:last-child{
+
+  width:150px;
+
+}
+
+
+.student-name{
+
+  font-size:13px;
+
+  font-weight:750;
+
+}
+
+
+.student-nisn{
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:11px;
+
+}
+
+
+.nilai-input{
+
+  width:100px;
+
+  height:40px;
+
+  padding:
+    0 10px;
+
+  border:
+    1px solid
+    #cbd5e1;
+
+  border-radius:9px;
+
+  outline:none;
+
+  text-align:center;
+
+  font-weight:800;
+
+}
+
+
+.nilai-input:focus{
+
+  border-color:
+    var(--primary);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(15,118,110,.10);
+
+}
+
+
+.nilai-input.invalid{
+
+  border-color:
+    var(--danger);
+
+  background:
+    #fef2f2;
+
+}
+
+
+/* =========================================================
+   EXCEL IMPORT
+========================================================= */
+
+.excel-panel{
+
+  display:none;
+
+  margin-top:22px;
+
+}
+
+
+.excel-box{
+
+  padding:25px;
+
+}
+
+
+.dropzone{
+
+  border:
+    2px dashed
+    #cbd5e1;
+
+  border-radius:18px;
+
+  padding:40px 20px;
+
+  text-align:center;
+
+  background:#f8fafc;
+
+  cursor:pointer;
+
+}
+
+
+.dropzone:hover{
+
+  border-color:
+    var(--primary);
+
+  background:#f0fdfa;
+
+}
+
+
+.drop-icon{
+
+  font-size:40px;
+
+  margin-bottom:10px;
+
+}
+
+
+.drop-title{
+
+  font-size:15px;
+
+  font-weight:900;
+
+}
+
+
+.drop-text{
+
+  margin-top:5px;
+
+  color:var(--muted);
+
+  font-size:12px;
+
+}
+
+
+#excelInput{
+
+  display:none;
+
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.preview{
+
+  display:none;
+
+  margin-top:22px;
+
+}
+
+
+.preview-summary{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:10px;
+
+  margin-bottom:15px;
+
+}
+
+
+.summary-item{
+
+  padding:
+    9px 13px;
+
+  border-radius:999px;
+
+  background:#f1f5f9;
+
+  font-size:12px;
+
+  font-weight:800;
+
+}
+
+
+.summary-item.ok{
+
+  color:#166534;
+
+  background:#dcfce7;
+
+}
+
+
+.summary-item.bad{
+
+  color:#991b1b;
+
+  background:#fee2e2;
+
+}
+
+
+.preview-table{
+
+  overflow:auto;
+
+  max-height:500px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:14px;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+#status{
+
+  display:none;
+
+  margin-top:18px;
+
+  padding:
+    14px 17px;
+
+  border-radius:13px;
+
+  font-size:13px;
+
+  line-height:1.55;
+
+}
+
+
+#status.success{
+
+  display:block;
+
+  color:#166534;
+
+  background:#f0fdf4;
+
+  border:
+    1px solid
+    #bbf7d0;
+
+}
+
+
+#status.error{
+
+  display:block;
+
+  color:#991b1b;
+
+  background:#fef2f2;
+
+  border:
+    1px solid
+    #fecaca;
+
+}
+
+
+#status.warning{
+
+  display:block;
+
+  color:#92400e;
+
+  background:#fffbeb;
+
+  border:
+    1px solid
+    #fde68a;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+
+  padding:
+    25px 20px
+    35px;
+
+  text-align:center;
+
+  color:#94a3b8;
+
+  font-size:11px;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:850px){
+
+  .steps{
+
+    grid-template-columns:
+      1fr 1fr;
+
+  }
+
+}
+
+
+@media(max-width:650px){
+
+  .header-inner{
+
+    min-height:70px;
+
+  }
+
+
+  .brand-title{
+
+    font-size:16px;
+
+  }
+
+
+  .brand-subtitle{
+
+    font-size:10px;
+
+  }
+
+
+  .logo{
+
+    width:44px;
+
+    height:44px;
+
+  }
+
+
+  .year-badge{
+
+    display:none;
+
+  }
+
+
+  .main{
+
+    padding:
+      25px 14px
+      50px;
+
+  }
+
+
+  .welcome h1{
+
+    font-size:23px;
+
+  }
+
+
+  .steps{
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .form-grid{
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .card-body{
+
+    padding:20px;
+
+  }
+
+
+  .nilai-toolbar{
+
+    align-items:flex-start;
+
+    flex-direction:column;
+
+  }
+
+
+  .actions{
+
+    flex-direction:column;
+
+  }
+
+
+  .actions .btn{
+
+    width:100%;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+  <div class="header-inner">
+
+    <div class="brand">
+
+      <div class="logo">
+        AG
+      </div>
+
+      <div>
+
+        <div class="brand-title">
+          RAPORT INTEGRASI
+        </div>
+
+        <div class="brand-subtitle">
+          Pondok Modern Al-Ghozali
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="year-badge">
+      Tahun Pelajaran 2026–2027
+    </div>
+
+  </div>
+
+</header>
+
+
+<main class="main">
+
+
+<!-- =========================================================
+     WELCOME
+========================================================= -->
+
+<section class="welcome">
+
+  <h1>
+    Input Nilai
+  </h1>
+
+  <p>
+    Pilih jenjang, kelas, dan mata pelajaran
+    untuk mengisi nilai siswa.
+  </p>
+
+</section>
+
+
+<!-- =========================================================
+     STEPS
+========================================================= -->
+
+<div class="steps">
+
+
+  <div
+    id="step1"
+    class="step active"
+  >
+
+    <div class="step-number">
+      1
+    </div>
+
+    <div>
+
+      <div class="step-title">
+        LANGKAH 1
+      </div>
+
+      <div class="step-name">
+        Jenjang
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="step2"
+    class="step"
+  >
+
+    <div class="step-number">
+      2
+    </div>
+
+    <div>
+
+      <div class="step-title">
+        LANGKAH 2
+      </div>
+
+      <div class="step-name">
+        Kelas
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="step3"
+    class="step"
+  >
+
+    <div class="step-number">
+      3
+    </div>
+
+    <div>
+
+      <div class="step-title">
+        LANGKAH 3
+      </div>
+
+      <div class="step-name">
+        Mata Pelajaran
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="step4"
+    class="step"
+  >
+
+    <div class="step-number">
+      4
+    </div>
+
+    <div>
+
+      <div class="step-title">
+        LANGKAH 4
+      </div>
+
+      <div class="step-name">
+        Input Nilai
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     PILIH JENJANG / KELAS
+========================================================= -->
+
+<section class="card">
+
+
+  <div class="card-header">
+
+    <h2>
+      Pilih Data Kelas
+    </h2>
+
+    <p>
+      Tentukan jenjang dan kelas terlebih dahulu.
+    </p>
+
+  </div>
+
+
+  <div class="card-body">
+
+
+    <div class="form-grid">
+
+
+      <div class="form-group">
+
+        <label>
+          Jenjang
+        </label>
+
+        <select
+          id="jenjang"
+          onchange="ubahJenjang()"
+        >
+
+          <option value="">
+            Pilih Jenjang
+          </option>
+
+          <option value="SMP">
+            SMP
+          </option>
+
+          <option value="SMA">
+            SMA
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Kelas
+        </label>
+
+        <select
+          id="kelas"
+          onchange="ubahKelas()"
+          disabled
+        >
+
+          <option>
+            Pilih jenjang terlebih dahulu
+          </option>
+
+        </select>
+
+      </div>
+
+
+    </div>
+
+
+    <div class="info-box">
+
+      <div class="info-title">
+        💡 Petunjuk Pengisian
+      </div>
+
+      Pilih jenjang dan kelas. Setelah itu pilih
+      mata pelajaran. Nilai dapat diisi langsung
+      pada tabel atau menggunakan template Excel.
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        id="btnMapel"
+        class="btn btn-primary"
+        onclick="ambilMapel()"
+        disabled
+      >
+        Tampilkan Mata Pelajaran →
+      </button>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     LOADING
+========================================================= -->
+
+<section
+  id="loading"
+  class="card loading"
+>
+
+  <div class="spinner"></div>
+
+  <div
+    id="loadingText"
+    class="loading-text"
+  >
+    Memproses...
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     MAPEL
+========================================================= -->
+
+<section
+  id="mapelSection"
+  class="card"
+>
+
+
+  <div class="card-header">
+
+    <h2>
+      Pilih Mata Pelajaran
+    </h2>
+
+    <p id="mapelInfo">
+      -
+    </p>
+
+  </div>
+
+
+  <div class="card-body">
+
+    <div
+      id="mapelGrid"
+      class="mapel-grid"
+    ></div>
+
+  </div>
+
+
+</section>
+
+
+<!-- =========================================================
+     NILAI MANUAL
+========================================================= -->
+
+<section
+  id="nilaiSection"
+  class="card"
+>
+
+
+  <div class="nilai-toolbar">
+
+    <div>
+
+      <div
+        id="judulNilai"
+        class="nilai-title"
+      >
+        Input Nilai
+      </div>
+
+      <div
+        id="subjudulNilai"
+        class="nilai-subtitle"
+      >
+        -
+      </div>
+
+    </div>
+
+
+    <button
+      class="btn btn-secondary"
+      onclick="kembaliMapel()"
+    >
+      ← Ganti Mata Pelajaran
+    </button>
+
+  </div>
+
+
+  <div class="card-body">
+
+    <div class="actions">
+
+      <button
+        class="btn btn-excel"
+        onclick="downloadTemplate()"
+      >
+        📊 Download Template Excel
+      </button>
+
+
+      <button
+        class="btn btn-secondary"
+        onclick="bukaImportExcel()"
+      >
+        📤 Import Excel
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="table-wrapper">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            No
+          </th>
+
+          <th>
+            Siswa
+          </th>
+
+          <th>
+            Nilai
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody
+        id="siswaBody"
+      ></tbody>
+
+    </table>
+
+  </div>
+
+
+  <div class="card-body">
+
+    <div class="actions">
+
+      <button
+        id="btnSimpan"
+        class="btn btn-primary"
+        onclick="simpanManual()"
+      >
+        💾 Simpan Nilai
+      </button>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+<!-- =========================================================
+     EXCEL IMPORT
+========================================================= -->
+
+<section
+  id="excelPanel"
+  class="card excel-panel"
+>
+
+
+  <div class="card-header">
+
+    <h2>
+      Import Nilai Excel
+    </h2>
+
+    <p>
+      Upload template Excel yang sudah diisi.
+    </p>
+
+  </div>
+
+
+  <div class="excel-box">
+
+
+    <div
+      class="dropzone"
+      onclick="document.getElementById('excelInput').click()"
+    >
+
+      <div class="drop-icon">
+        📊
+      </div>
+
+      <div class="drop-title">
+        Klik untuk memilih file Excel
+      </div>
+
+      <div class="drop-text">
+        Format .xlsx atau .xls
+      </div>
+
+    </div>
+
+
+    <input
+      type="file"
+      id="excelInput"
+      accept=".xlsx,.xls"
+      onchange="bacaExcel(event)"
+    >
+
+
+    <div
+      id="preview"
+      class="preview"
+    >
+
+      <div
+        id="previewSummary"
+        class="preview-summary"
+      ></div>
+
+
+      <div class="preview-table">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                No
+              </th>
+
+              <th>
+                Nama
+              </th>
+
+              <th>
+                NISN
+              </th>
+
+              <th>
+                Nilai
+              </th>
+
+              <th>
+                Status
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody
+            id="previewBody"
+          ></tbody>
+
+        </table>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="btn btn-secondary"
+          onclick="batalExcel()"
+        >
+          Batal
+        </button>
+
+
+        <button
+          id="btnSimpanExcel"
+          class="btn btn-primary"
+          onclick="simpanExcel()"
+        >
+          💾 Simpan ke Raport
+        </button>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     STATUS
+========================================================= -->
+
+<div id="status"></div>
+
+
+</main>
+
+
+<footer class="footer">
+
+  RAPORT INTEGRASI
+  •
+  Pondok Modern Al-Ghozali
+  •
+  Tahun Pelajaran 2026–2027
+
+</footer>
+
+
+<script>
+
+
+/* =========================================================
+   URL KELAS
+========================================================= */
+
+const CLASS_URLS = {
+
+
+  SMP: {
+
+    "KELAS 1 A":
+      "https://script.google.com/macros/s/AKfycby8raQhYr_hGbm0FRVn2CdJZfYJY1sacUno3Zk_GnMgIySh3U16iCPDgUuR_ravGTUrSg/exec",
+
+    "KELAS 1 B":
+      "https://script.google.com/macros/s/AKfycbwI7LWYYiIVhJWnmjiPFnYqRiP-_doo9_6VUi2C1Bh-HXRfV1YypODzlS_6556xnIga/exec",
+
+    "KELAS 1 C":
+      "https://script.google.com/macros/s/AKfycbz3j5j62mDUfQaVymplk1wTVo329UiewTzxqpgYFvcALCgGJCx4_7Y_QgeoTUrJnhw/exec"
+
+  },
+
+
+  SMA: {
+
+    "1 INTENSIF":
+      "https://script.google.com/macros/s/AKfycbzjFTPAmI1pj6yFm_GFL6DHl9Fhuzlf5IzPBpodYr01mGfDg21Tp57hQ8sGDJ7Q_W0/exec"
+
+  }
+
+};
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentJenjang = '';
+
+let currentKelas = '';
+
+let currentSubject = '';
+
+let currentUrl = '';
+
+let currentStudents = [];
+
+let excelRows = [];
+
+
+/* =========================================================
+   ELEMENT
+========================================================= */
+
+const jenjangEl =
+  document.getElementById(
+    'jenjang'
+  );
+
+const kelasEl =
+  document.getElementById(
+    'kelas'
+  );
+
+const btnMapel =
+  document.getElementById(
+    'btnMapel'
+  );
+
+
+/* =========================================================
+   UBAH JENJANG
+========================================================= */
+
+function ubahJenjang(){
+
+  currentJenjang =
+    jenjangEl.value;
+
+
+  currentKelas = '';
+
+  currentSubject = '';
+
+  currentUrl = '';
+
+
+  kelasEl.innerHTML = '';
+
+
+  btnMapel.disabled =
+    true;
+
+
+  document.getElementById(
+    'mapelSection'
+  ).style.display =
+    'none';
+
+
+  document.getElementById(
+    'nilaiSection'
+  ).style.display =
+    'none';
+
+
+  document.getElementById(
+    'excelPanel'
+  ).style.display =
+    'none';
+
+
+  hideStatus();
+
+
+  if(!currentJenjang){
+
+    kelasEl.disabled =
+      true;
+
+
+    kelasEl.innerHTML = `
+
+      <option>
+        Pilih jenjang terlebih dahulu
+      </option>
+
+    `;
+
+
+    return;
+
+  }
+
+
+  kelasEl.disabled =
+    false;
+
+
+  const daftar =
+    CLASS_URLS[
+      currentJenjang
+    ] || {};
+
+
+  kelasEl.innerHTML = `
+
+    <option value="">
+      Pilih Kelas
+    </option>
+
+  `;
+
+
+  Object.keys(
+    daftar
+  ).forEach(
+    function(nama){
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+
+      option.value =
+        nama;
+
+
+      option.textContent =
+        nama;
+
+
+      kelasEl.appendChild(
+        option
+      );
+
+    }
+  );
+
+
+  setStep(1);
+
+}
+
+
+/* =========================================================
+   UBAH KELAS
+========================================================= */
+
+function ubahKelas(){
+
+  currentKelas =
+    kelasEl.value;
+
+
+  btnMapel.disabled =
+    !currentKelas;
+
+
+  if(!currentKelas){
+
+    return;
+
+  }
+
+
+  currentUrl =
+    CLASS_URLS[
+      currentJenjang
+    ][
+      currentKelas
+    ];
+
+
+  setStep(2);
+
+}
+
+
+/* =========================================================
+   AMBIL MAPEL
+========================================================= */
+
+function ambilMapel(){
+
+  if(!currentUrl){
+
+    tampilStatus(
+      'URL kelas belum tersedia.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  tampilLoading(
+    'Mengambil mata pelajaran...'
+  );
+
+
+  requestJSONP(
+
+    currentUrl +
+    '?action=subjects',
+
+    function(data){
+
+      sembunyikanLoading();
+
+
+      if(
+        !data ||
+        data.success === false
+      ){
+
+        tampilStatus(
+          data?.message ||
+          'Gagal mengambil mata pelajaran.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      tampilkanMapel(
+        data.subjects || []
+      );
+
+    }
+
+  );
+
+}
+
+
+/* =========================================================
+   TAMPIL MAPEL
+========================================================= */
+
+function tampilkanMapel(
+  subjects
+){
+
+  const section =
+    document.getElementById(
+      'mapelSection'
+    );
+
+
+  const grid =
+    document.getElementById(
+      'mapelGrid'
+    );
+
+
+  grid.innerHTML =
+    '';
+
+
+  subjects.forEach(
+    function(subject,index){
+
+      const name =
+        typeof subject ===
+        'object'
+          ? subject.name
+          : subject;
+
+
+      const item =
+        document.createElement(
+          'div'
+        );
+
+
+      item.className =
+        'mapel-item';
+
+
+      item.innerHTML = `
+
+        <div class="mapel-number">
+          ${index + 1}
+        </div>
+
+        <div class="mapel-name">
+          ${escapeHtml(name)}
+        </div>
+
+      `;
+
+
+      item.onclick =
+        function(){
+
+          pilihMapel(
+            name,
+            item
+          );
+
+        };
+
+
+      grid.appendChild(
+        item
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    'mapelInfo'
+  ).textContent =
+    currentKelas;
+
+
+  section.style.display =
+    'block';
+
+
+  section.scrollIntoView({
+    behavior:'smooth'
+  });
+
+
+  setStep(3);
+
+}
+
+
+/* =========================================================
+   PILIH MAPEL
+========================================================= */
+
+function pilihMapel(
+  subject,
+  element
+){
+
+  currentSubject =
+    subject;
+
+
+  document
+    .querySelectorAll(
+      '.mapel-item'
+    )
+    .forEach(
+      function(el){
+
+        el.classList.remove(
+          'selected'
+        );
+
+      }
+    );
+
+
+  element.classList.add(
+    'selected'
+  );
+
+
+  ambilSiswa();
+
+}
+
+
+/* =========================================================
+   AMBIL SISWA
+========================================================= */
+
+function ambilSiswa(){
+
+  tampilLoading(
+    'Mengambil daftar siswa dan nilai...'
+  );
+
+
+  const url =
+    currentUrl +
+    '?action=students' +
+    '&subject=' +
+    encodeURIComponent(
+      currentSubject
+    );
+
+
+  requestJSONP(
+    url,
+    function(data){
+
+      sembunyikanLoading();
+
+
+      if(
+        !data ||
+        data.success === false
+      ){
+
+        tampilStatus(
+          data?.message ||
+          'Gagal mengambil siswa.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      currentStudents =
+        data.students || [];
+
+
+      tampilkanSiswa(
+        currentStudents
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   TAMPIL SISWA
+========================================================= */
+
+function tampilkanSiswa(
+  students
+){
+
+  const body =
+    document.getElementById(
+      'siswaBody'
+    );
+
+
+  body.innerHTML =
+    '';
+
+
+  students.forEach(
+    function(student,index){
+
+      const tr =
+        document.createElement(
+          'tr'
+        );
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${escapeHtml(
+            student.no ||
+            index + 1
+          )}
+        </td>
+
+        <td>
+
+          <div class="student-name">
+            ${escapeHtml(
+              student.nama
+            )}
+          </div>
+
+          <div class="student-nisn">
+            NISN:
+            ${escapeHtml(
+              student.nisn
+            )}
+          </div>
+
+        </td>
+
+        <td>
+
+          <input
+
+            class="nilai-input"
+
+            type="number"
+
+            min="0"
+
+            max="100"
+
+            step="0.01"
+
+            value="${
+              student.nilai === '' ||
+              student.nilai === null ||
+              student.nilai === undefined
+                ? ''
+                : student.nilai
+            }"
+
+            data-row="${
+              student.row
+            }"
+
+            data-nisn="${
+              escapeHtml(
+                student.nisn
+              )
+            }"
+
+            data-nama="${
+              escapeHtml(
+                student.nama
+              )
+            }"
+
+            placeholder="0–100"
+
+          >
+
+        </td>
+
+      `;
+
+
+      const input =
+        tr.querySelector(
+          '.nilai-input'
+        );
+
+
+      input.addEventListener(
+        'input',
+        function(){
+
+          validasiNilai(
+            input
+          );
+
+        }
+      );
+
+
+      body.appendChild(
+        tr
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    'judulNilai'
+  ).textContent =
+    'Input Nilai • ' +
+    currentSubject;
+
+
+  document.getElementById(
+    'subjudulNilai'
+  ).textContent =
+    currentKelas +
+    ' • ' +
+    students.length +
+    ' siswa';
+
+
+  document.getElementById(
+    'nilaiSection'
+  ).style.display =
+    'block';
+
+
+  setStep(4);
+
+
+  document.getElementById(
+    'nilaiSection'
+  ).scrollIntoView({
+    behavior:'smooth'
+  });
+
+}
+
+
+/* =========================================================
+   SIMPAN MANUAL
+========================================================= */
+
+function simpanManual(){
+
+  const inputs =
+    Array.from(
+      document.querySelectorAll(
+        '.nilai-input'
+      )
+    );
+
+
+  if(!inputs.length){
+
+    tampilStatus(
+      'Tidak ada data nilai.',
+      'warning'
+    );
+
+    return;
+
+  }
+
+
+  const payload = [];
+
+
+  let invalid =
+    false;
+
+
+  inputs.forEach(
+    function(input){
+
+      if(
+        !validasiNilai(
+          input
+        )
+      ){
+
+        invalid =
+          true;
+
+      }
+
+
+      payload.push({
+
+        row:
+          Number(
+            input.dataset.row
+          ),
+
+        nisn:
+          input.dataset.nisn,
+
+        nama:
+          input.dataset.nama,
+
+        nilai:
+          input.value.trim()
+
+      });
+
+    }
+  );
+
+
+  if(invalid){
+
+    tampilStatus(
+      'Ada nilai yang tidak valid.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  kirimNilai(
+    payload
+  );
+
+}
+
+
+/* =========================================================
+   KIRIM NILAI
+========================================================= */
+
+function kirimNilai(
+  payload
+){
+
+  const btn =
+    document.getElementById(
+      'btnSimpan'
+    );
+
+
+  if(btn){
+
+    btn.disabled =
+      true;
+
+    btn.textContent =
+      '⏳ Menyimpan...';
+
+  }
+
+
+  tampilLoading(
+    'Menyimpan nilai ke raport...'
+  );
+
+
+  /*
+   * Karena frontend Vercel
+   * memakai JSONP, payload dikirim
+   * sebagai GET.
+   */
+
+  const url =
+    currentUrl +
+    '?action=save' +
+    '&subject=' +
+    encodeURIComponent(
+      currentSubject
+    ) +
+    '&payload=' +
+    encodeURIComponent(
+      JSON.stringify(
+        payload
+      )
+    );
+
+
+  requestJSONP(
+    url,
+    function(data){
+
+      sembunyikanLoading();
+
+
+      if(btn){
+
+        btn.disabled =
+          false;
+
+        btn.textContent =
+          '💾 Simpan Nilai';
+
+      }
+
+
+      if(
+        !data ||
+        data.success === false
+      ){
+
+        tampilStatus(
+          data?.message ||
+          'Nilai gagal disimpan.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      let message =
+        data.message ||
+        'Nilai berhasil disimpan.';
+
+
+      if(
+        data.updatedCount !== undefined
+      ){
+
+        message +=
+          ' ' +
+          data.updatedCount +
+          ' data diproses.';
+
+      }
+
+
+      tampilStatus(
+        '✓ ' + message,
+        'success'
+      );
+
+
+      setTimeout(
+        function(){
+
+          ambilSiswa();
+
+        },
+        700
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   DOWNLOAD TEMPLATE EXCEL
+========================================================= */
+
+function downloadTemplate(){
+
+  if(
+    !currentStudents.length
+  ){
+
+    tampilStatus(
+      'Data siswa belum tersedia.',
+      'warning'
+    );
+
+    return;
+
+  }
+
+
+  if(
+    typeof XLSX ===
+    'undefined'
+  ){
+
+    tampilStatus(
+      'Library Excel belum berhasil dimuat.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  const rows = [];
+
+
+  /*
+   * Baris informasi
+   */
+
+  rows.push([
+    'RAPORT INTEGRASI PONDOK MODERN AL-GHOZALI'
+  ]);
+
+
+  rows.push([
+    'TAHUN PELAJARAN 2026-2027'
+  ]);
+
+
+  rows.push([
+    'KELAS',
+    currentKelas
+  ]);
+
+
+  rows.push([
+    'MATA PELAJARAN',
+    currentSubject
+  ]);
+
+
+  rows.push([]);
+
+
+  /*
+   * Header
+   */
+
+  rows.push([
+    'NO',
+    'NISN',
+    'NAMA SISWA',
+    'NILAI'
+  ]);
+
+
+  /*
+   * Data siswa
+   */
+
+  currentStudents.forEach(
+    function(student,index){
+
+      rows.push([
+
+        student.no ||
+        index + 1,
+
+        student.nisn,
+
+        student.nama,
+
+        student.nilai === null ||
+        student.nilai === undefined
+          ? ''
+          : student.nilai
+
+      ]);
+
+    }
+  );
+
+
+  const worksheet =
+    XLSX.utils.aoa_to_sheet(
+      rows
+    );
+
+
+  worksheet[
+    '!cols'
+  ] = [
+
+    { wch:10 },
+
+    { wch:20 },
+
+    { wch:35 },
+
+    { wch:15 }
+
+  ];
+
+
+  const workbook =
+    XLSX.utils.book_new();
+
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    'INPUT NILAI'
+  );
+
+
+  const safeClass =
+    currentKelas
+      .replace(
+        /[^a-z0-9]+/gi,
+        '_'
+      );
+
+
+  const safeSubject =
+    currentSubject
+      .replace(
+        /[^a-z0-9]+/gi,
+        '_'
+      );
+
+
+  const filename =
+    'TEMPLATE_NILAI_' +
+    safeClass +
+    '_' +
+    safeSubject +
+    '.xlsx';
+
+
+  XLSX.writeFile(
+    workbook,
+    filename
+  );
+
+
+  tampilStatus(
+    'Template Excel berhasil dibuat.',
+    'success'
+  );
+
+}
+
+
+/* =========================================================
+   BUKA IMPORT EXCEL
+========================================================= */
+
+function bukaImportExcel(){
+
+  document.getElementById(
+    'excelPanel'
+  ).style.display =
+    'block';
+
+
+  document.getElementById(
+    'excelPanel'
+  ).scrollIntoView({
+    behavior:'smooth'
+  });
+
+}
+
+
+/* =========================================================
+   BACA EXCEL
+========================================================= */
+
+function bacaExcel(
+  event
+){
+
+  const file =
+    event.target.files[0];
+
+
+  if(!file){
+
+    return;
+
+  }
+
+
+  if(
+    typeof XLSX ===
+    'undefined'
+  ){
+
+    tampilStatus(
+      'Library Excel belum tersedia.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    function(e){
+
+      try{
+
+        const workbook =
+          XLSX.read(
+            e.target.result,
+            {
+              type:'array'
+            }
+          );
+
+
+        const firstSheet =
+          workbook.Sheets[
+            workbook.SheetNames[0]
+          ];
+
+
+        const data =
+          XLSX.utils.sheet_to_json(
+            firstSheet,
+            {
+              header:1,
+              defval:''
+            }
+          );
+
+
+        prosesDataExcel(
+          data
+        );
+
+      }
+      catch(error){
+
+        tampilStatus(
+          'File Excel tidak dapat dibaca: ' +
+          error.message,
+          'error'
+        );
+
+      }
+
+    };
+
+
+  reader.readAsArrayBuffer(
+    file
+  );
+
+}
+
+
+/* =========================================================
+   PROSES DATA EXCEL
+========================================================= */
+
+function prosesDataExcel(
+  data
+){
+
+  /*
+   * Cari baris header.
+   */
+
+  let headerIndex =
+    -1;
+
+
+  for(
+    let i=0;
+    i<data.length;
+    i++
+  ){
+
+    const row =
+      data[i]
+        .map(
+          function(v){
+
+            return String(
+              v
+            )
+              .trim()
+              .toUpperCase();
+
+          }
+        );
+
+
+    if(
+      row.includes('NISN') &&
+      (
+        row.includes('NAMA SISWA') ||
+        row.includes('NAMA')
+      ) &&
+      row.includes('NILAI')
+    ){
+
+      headerIndex =
+        i;
+
+      break;
+
+    }
+
+  }
+
+
+  if(
+    headerIndex === -1
+  ){
+
+    tampilStatus(
+      'Header Excel tidak ditemukan. Gunakan template dari aplikasi.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  const headers =
+    data[
+      headerIndex
+    ]
+      .map(
+        function(v){
+
+          return String(
+            v
+          )
+            .trim()
+            .toUpperCase();
+
+        }
+      );
+
+
+  const noIndex =
+    headers.indexOf(
+      'NO'
+    );
+
+
+  const nisnIndex =
+    headers.indexOf(
+      'NISN'
+    );
+
+
+  let namaIndex =
+    headers.indexOf(
+      'NAMA SISWA'
+    );
+
+
+  if(
+    namaIndex === -1
+  ){
+
+    namaIndex =
+      headers.indexOf(
+        'NAMA'
+      );
+
+  }
+
+
+  const nilaiIndex =
+    headers.indexOf(
+      'NILAI'
+    );
+
+
+  excelRows = [];
+
+
+  for(
+    let i =
+      headerIndex + 1;
+
+    i <
+      data.length;
+
+    i++
+  ){
+
+    const row =
+      data[i];
+
+
+    const nisn =
+      String(
+        row[
+          nisnIndex
+        ] ||
+        ''
+      ).trim();
+
+
+    const nama =
+      String(
+        row[
+          namaIndex
+        ] ||
+        ''
+      ).trim();
+
+
+    const nilai =
+      row[
+        nilaiIndex
+      ] === undefined
+        ? ''
+        : row[
+            nilaiIndex
+          ];
+
+
+    if(
+      !nisn &&
+      !nama
+    ){
+
+      continue;
+
+    }
+
+
+    excelRows.push({
+
+      no:
+        noIndex !== -1
+          ? row[
+              noIndex
+            ]
+          : excelRows.length + 1,
+
+      nisn:
+        nisn,
+
+      nama:
+        nama,
+
+      nilai:
+        nilai
+
+    });
+
+  }
+
+
+  tampilPreview();
+
+}
+
+
+/* =========================================================
+   PREVIEW EXCEL
+========================================================= */
+
+function tampilPreview(){
+
+  const preview =
+    document.getElementById(
+      'preview'
+    );
+
+
+  const summary =
+    document.getElementById(
+      'previewSummary'
+    );
+
+
+  const body =
+    document.getElementById(
+      'previewBody'
+    );
+
+
+  body.innerHTML =
+    '';
+
+
+  let valid =
+    0;
+
+
+  let invalid =
+    0;
+
+
+  excelRows.forEach(
+    function(item){
+
+      let status =
+        'OK';
+
+
+      let validRow =
+        true;
+
+
+      const value =
+        String(
+          item.nilai
+        ).trim();
+
+
+      if(
+        value !== ''
+      ){
+
+        const number =
+          Number(
+            value
+          );
+
+
+        if(
+          isNaN(number) ||
+          number < 0 ||
+          number > 100
+        ){
+
+          validRow =
+            false;
+
+          status =
+            'Nilai tidak valid';
+
+        }
+
+      }
+
+
+      if(
+        !item.nisn
+      ){
+
+        validRow =
+          false;
+
+        status =
+          'NISN kosong';
+
+      }
+
+
+      if(
+        validRow
+      ){
+
+        valid++;
+
+      }
+      else{
+
+        invalid++;
+
+      }
+
+
+      const tr =
+        document.createElement(
+          'tr'
+        );
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${escapeHtml(
+            item.no
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            item.nama
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            item.nisn
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            item.nilai
+          )}
+        </td>
+
+        <td>
+          ${
+            validRow
+              ? '✓ OK'
+              : '⚠ ' + status
+          }
+        </td>
+
+      `;
+
+
+      body.appendChild(
+        tr
+      );
+
+    }
+  );
+
+
+  summary.innerHTML = `
+
+    <div class="summary-item">
+      Total: ${excelRows.length}
+    </div>
+
+    <div class="summary-item ok">
+      ✓ Valid: ${valid}
+    </div>
+
+    <div class="summary-item bad">
+      ⚠ Bermasalah: ${invalid}
+    </div>
+
+  `;
+
+
+  preview.style.display =
+    'block';
+
+
+  document.getElementById(
+    'btnSimpanExcel'
+  ).disabled =
+    invalid > 0;
+
+
+  preview.scrollIntoView({
+    behavior:'smooth'
+  });
+
+}
+
+
+/* =========================================================
+   SIMPAN EXCEL
+========================================================= */
+
+function simpanExcel(){
+
+  if(
+    !excelRows.length
+  ){
+
+    tampilStatus(
+      'Tidak ada data Excel.',
+      'warning'
+    );
+
+    return;
+
+  }
+
+
+  const payload =
+    excelRows.map(
+      function(item){
+
+        return {
+
+          row:
+            '',
+
+          nisn:
+            item.nisn,
+
+          nama:
+            item.nama,
+
+          nilai:
+            item.nilai === null ||
+            item.nilai === undefined
+              ? ''
+              : String(
+                  item.nilai
+                ).trim()
+
+        };
+
+      }
+    );
+
+
+  const invalid =
+    payload.some(
+      function(item){
+
+        if(
+          !item.nisn
+        ){
+
+          return true;
+
+        }
+
+
+        if(
+          item.nilai === ''
+        ){
+
+          return false;
+
+        }
+
+
+        const n =
+          Number(
+            item.nilai
+          );
+
+
+        return (
+          isNaN(n) ||
+          n < 0 ||
+          n > 100
+        );
+
+      }
+    );
+
+
+  if(invalid){
+
+    tampilStatus(
+      'Masih terdapat data Excel yang tidak valid.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  const btn =
+    document.getElementById(
+      'btnSimpanExcel'
+    );
+
+
+  btn.disabled =
+    true;
+
+
+  btn.textContent =
+    '⏳ Menyimpan...';
+
+
+  tampilLoading(
+    'Menyimpan nilai Excel...'
+  );
+
+
+  const url =
+    currentUrl +
+    '?action=save' +
+    '&subject=' +
+    encodeURIComponent(
+      currentSubject
+    ) +
+    '&payload=' +
+    encodeURIComponent(
+      JSON.stringify(
+        payload
+      )
+    );
+
+
+  requestJSONP(
+    url,
+    function(data){
+
+      sembunyikanLoading();
+
+
+      btn.disabled =
+        false;
+
+
+      btn.textContent =
+        '💾 Simpan ke Raport';
+
+
+      if(
+        !data ||
+        data.success === false
+      ){
+
+        tampilStatus(
+          data?.message ||
+          'Data Excel gagal disimpan.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      tampilStatus(
+        '✓ ' +
+        (
+          data.message ||
+          'Nilai Excel berhasil disimpan.'
+        ) +
+        ' ' +
+        (
+          data.updatedCount ||
+          0
+        ) +
+        ' data diproses.',
+        'success'
+      );
+
+
+      setTimeout(
+        function(){
+
+          batalExcel();
+
+          ambilSiswa();
+
+        },
+        700
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   BATAL EXCEL
+========================================================= */
+
+function batalExcel(){
+
+  excelRows = [];
+
+
+  document.getElementById(
+    'preview'
+  ).style.display =
+    'none';
+
+
+  document.getElementById(
+    'excelPanel'
+  ).style.display =
+    'none';
+
+
+  document.getElementById(
+    'excelInput'
+  ).value =
+    '';
+
+}
+
+
+/* =========================================================
+   KEMBALI MAPEL
+========================================================= */
+
+function kembaliMapel(){
+
+  document.getElementById(
+    'nilaiSection'
+  ).style.display =
+    'none';
+
+
+  document.getElementById(
+    'excelPanel'
+  ).style.display =
+    'none';
+
+
+  document.getElementById(
+    'mapelSection'
+  ).style.display =
+    'block';
+
+
+  setStep(3);
+
+}
+
+
+/* =========================================================
+   VALIDASI
+========================================================= */
+
+function validasiNilai(
+  input
+){
+
+  const value =
+    input.value.trim();
+
+
+  input.classList.remove(
+    'invalid'
+  );
+
+
+  if(
+    value === ''
+  ){
+
+    return true;
+
+  }
+
+
+  const number =
+    Number(
+      value
+    );
+
+
+  if(
+    isNaN(number) ||
+    number < 0 ||
+    number > 100
+  ){
+
+    input.classList.add(
+      'invalid'
+    );
+
+    return false;
+
+  }
+
+
+  return true;
+
+}
+
+
+/* =========================================================
+   JSONP
+========================================================= */
+
+function requestJSONP(
+  url,
+  callback
+){
+
+  const callbackName =
+    'raportCallback_' +
+    Date.now() +
+    '_' +
+    Math.floor(
+      Math.random() *
+      100000
+    );
+
+
+  let finished =
+    false;
+
+
+  let script =
+    null;
+
+
+  const timeout =
+    setTimeout(
+      function(){
+
+        if(finished){
+
+          return;
+
+        }
+
+
+        finished =
+          true;
+
+
+        cleanup();
+
+
+        sembunyikanLoading();
+
+
+        tampilStatus(
+          'Koneksi ke server terlalu lama. Periksa deployment Apps Script.',
+          'error'
+        );
+
+      },
+      30000
+    );
+
+
+  function cleanup(){
+
+    clearTimeout(
+      timeout
+    );
+
+
+    try{
+
+      delete window[
+        callbackName
+      ];
+
+    }
+    catch(error){}
+
+
+    if(
+      script &&
+      script.parentNode
+    ){
+
+      script.parentNode.removeChild(
+        script
+      );
+
+    }
+
+  }
+
+
+  window[
+    callbackName
+  ] =
+    function(data){
+
+      if(finished){
+
+        return;
+
+      }
+
+
+      finished =
+        true;
+
+
+      cleanup();
+
+
+      callback(
+        data
+      );
+
+    };
+
+
+  script =
+    document.createElement(
+      'script'
+    );
+
+
+  const separator =
+    url.includes('?')
+      ? '&'
+      : '?';
+
+
+  script.src =
+    url +
+    separator +
+    'callback=' +
+    encodeURIComponent(
+      callbackName
+    );
+
+
+  script.async =
+    true;
+
+
+  script.onerror =
+    function(){
+
+      if(finished){
+
+        return;
+
+      }
+
+
+      finished =
+        true;
+
+
+      cleanup();
+
+
+      sembunyikanLoading();
+
+
+      tampilStatus(
+        'Gagal menghubungkan ke Apps Script.',
+        'error'
+      );
+
+    };
+
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+function tampilLoading(
+  text
+){
+
+  document.getElementById(
+    'loadingText'
+  ).textContent =
+    text;
+
+
+  document.getElementById(
+    'loading'
+  ).style.display =
+    'block';
+
+}
+
+
+function sembunyikanLoading(){
+
+  document.getElementById(
+    'loading'
+  ).style.display =
+    'none';
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function tampilStatus(
+  message,
+  type
+){
+
+  const el =
+    document.getElementById(
+      'status'
+    );
+
+
+  el.textContent =
+    message;
+
+
+  el.className =
+    type;
+
+
+  el.style.display =
+    'block';
+
+
+  el.scrollIntoView({
+    behavior:'smooth',
+    block:'center'
+  });
+
+}
+
+
+function hideStatus(){
+
+  const el =
+    document.getElementById(
+      'status'
+    );
+
+
+  el.style.display =
+    'none';
+
+
+  el.textContent =
+    '';
+
+}
+
+
+/* =========================================================
+   STEP
+========================================================= */
+
+function setStep(
+  number
+){
+
+  document
+    .querySelectorAll(
+      '.step'
+    )
+    .forEach(
+      function(step,index){
+
+        step.classList.toggle(
+          'active',
+          index <
+          number
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(
+  value
+){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+
+    return '';
+
+  }
+
+
+  return String(
+    value
+  )
+
+    .replaceAll(
+      '&',
+      '&amp;'
+    )
+
+    .replaceAll(
+      '<',
+      '&lt;'
+    )
+
+    .replaceAll(
+      '>',
+      '&gt;'
+    )
+
+    .replaceAll(
+      '"',
+      '&quot;'
+    )
+
+    .replaceAll(
+      "'",
+      '&#039;'
+    );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+console.log(
+  'Raport Integrasi Pondok Modern Al-Ghozali aktif.'
+);
+
+</script>
+
+</body>
+</html>
