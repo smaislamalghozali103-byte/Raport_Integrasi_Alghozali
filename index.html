@@ -2299,7 +2299,7 @@ function ambilMapel(){
 
   // Jika API Master sudah diisi, mapel berasal dari Master.
   if (MASTER_API_URL && !MASTER_API_URL.includes('ISI_URL')) {
-    requestJSONP(MASTER_API_URL + '?action=subjects&unit=' + encodeURIComponent(currentJenjang) + '&callback=callback', function(data){
+    requestJSONP(MASTER_API_URL + '?action=subjects&unit=' + encodeURIComponent(currentJenjang) , function(data){
       sembunyikanLoading();
       if(!data || data.success === false){
         tampilStatus(data?.message || 'Gagal mengambil master mata pelajaran.', 'error');
