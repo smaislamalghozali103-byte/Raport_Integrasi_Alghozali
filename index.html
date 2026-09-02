@@ -1615,6 +1615,10 @@ td:last-child{
             SMA
           </option>
 
+          <option value="TMMIA">
+            TMMIA
+          </option>
+
         </select>
 
       </div>
@@ -1730,6 +1734,41 @@ td:last-child{
   </div>
 
 
+</section>
+
+
+<!-- =========================================================
+     GURU PENGAMPU
+========================================================= -->
+
+<section
+  id="guruSection"
+  class="card"
+  style="display:none"
+>
+  <div class="card-header">
+    <h2>
+      Pilih Guru Pengampu
+    </h2>
+    <p>
+      Guru ditampilkan berdasarkan unit, kelas, dan mata pelajaran.
+    </p>
+  </div>
+
+  <div class="card-body">
+    <div class="form-group">
+      <label>Nama Guru</label>
+      <select id="guruPengampu">
+        <option value="">Pilih Guru Pengampu</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button id="btnLanjutGuru" class="btn btn-primary" onclick="pilihGuruDanLanjut()" disabled>
+        Lanjut ke Input Nilai →
+      </button>
+    </div>
+  </div>
 </section>
 
 
@@ -2015,6 +2054,16 @@ td:last-child{
    URL KELAS
 ========================================================= */
 
+const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbwDIKK0A_RYSlMT8TlT5Ohc-HcuO_1YXlqHLg5NNZgBtdfEaSJHU2gkIEdTjDoojy5JSw/exec";
+
+const MASTER_DATA = {
+  units: [],
+  classes: [],
+  subjects: [],
+  teachers: [],
+  assignments: []
+};
+
 const CLASS_URLS = {
 
 
@@ -2051,6 +2100,7 @@ let currentJenjang = '';
 let currentKelas = '';
 
 let currentSubject = '';
+let currentTeacher = '';
 
 let currentUrl = '';
 
@@ -2111,6 +2161,11 @@ function ubahJenjang(){
 
   document.getElementById(
     'nilaiSection'
+  ).style.display =
+    'none';
+
+  document.getElementById(
+    'guruSection'
   ).style.display =
     'none';
 
@@ -2236,56 +2291,38 @@ function ubahKelas(){
 function ambilMapel(){
 
   if(!currentUrl){
-
-    tampilStatus(
-      'URL kelas belum tersedia.',
-      'error'
-    );
-
+    tampilStatus('URL kelas belum tersedia untuk kelas ini.', 'error');
     return;
-
   }
 
+  tampilLoading('Mengambil mata pelajaran...');
 
-  tampilLoading(
-    'Mengambil mata pelajaran...'
-  );
-
-
-  requestJSONP(
-
-    currentUrl +
-    '?action=subjects',
-
-    function(data){
-
+  // Jika API Master sudah diisi, mapel berasal dari Master.
+  if (MASTER_API_URL && !MASTER_API_URL.includes('ISI_URL')) {
+    requestJSONP(MASTER_API_URL + '?action=subjects&unit=' + encodeURIComponent(currentJenjang) + '&callback=callback', function(data){
       sembunyikanLoading();
-
-
-      if(
-        !data ||
-        data.success === false
-      ){
-
-        tampilStatus(
-          data?.message ||
-          'Gagal mengambil mata pelajaran.',
-          'error'
-        );
-
+      if(!data || data.success === false){
+        tampilStatus(data?.message || 'Gagal mengambil master mata pelajaran.', 'error');
         return;
-
       }
+      MASTER_DATA.subjects = data.data || data.subjects || [];
+      const filtered = MASTER_DATA.subjects.filter(function(x){
+        return (x.Unit || x.unit || '') === currentJenjang && String(x.Status || x.status || 'Aktif') !== 'Nonaktif';
+      });
+      tampilkanMapel(filtered.map(function(x){ return x['Mata Pelajaran'] || x.nama || x.name || x.subject || x; }));
+    });
+    return;
+  }
 
-
-      tampilkanMapel(
-        data.subjects || []
-      );
-
+  tampilLoading('Mengambil mata pelajaran...');
+  requestJSONP(currentUrl + '?action=subjects', function(data){
+    sembunyikanLoading();
+    if(!data || data.success === false){
+      tampilStatus(data?.message || 'Gagal mengambil mata pelajaran.', 'error');
+      return;
     }
-
-  );
-
+    tampilkanMapel(data.subjects || []);
+  });
 }
 
 
@@ -2394,32 +2431,66 @@ function pilihMapel(
   element
 ){
 
-  currentSubject =
-    subject;
+  currentSubject = subject;
+  currentTeacher = '';
 
+  document.querySelectorAll('.mapel-item').forEach(function(el){
+    el.classList.remove('selected');
+  });
+  element.classList.add('selected');
 
-  document
-    .querySelectorAll(
-      '.mapel-item'
-    )
-    .forEach(
-      function(el){
+  if (MASTER_API_URL && !MASTER_API_URL.includes('ISI_URL')) {
+    ambilGuruPengampu();
+  } else {
+    ambilSiswa();
+  }
+}
 
-        el.classList.remove(
-          'selected'
-        );
+function ambilGuruPengampu(){
+  const section = document.getElementById('guruSection');
+  const select = document.getElementById('guruPengampu');
+  const button = document.getElementById('btnLanjutGuru');
+  section.style.display = 'block';
+  select.innerHTML = '<option value="">Mengambil guru...</option>';
+  button.disabled = true;
+  tampilLoading('Mencari guru pengampu...');
 
-      }
-    );
+  const url = MASTER_API_URL + '?action=teachers&unit=' + encodeURIComponent(currentJenjang)
+    + '&kelas=' + encodeURIComponent(currentKelas)
+    + '&mapel=' + encodeURIComponent(currentSubject);
 
+  requestJSONP(url, function(data){
+    sembunyikanLoading();
+    if(!data || data.success === false){
+      tampilStatus(data?.message || 'Gagal mengambil guru pengampu.', 'error');
+      select.innerHTML = '<option value="">Guru tidak tersedia</option>';
+      return;
+    }
+    const teachers = data.data || data.teachers || [];
+    select.innerHTML = '<option value="">Pilih Guru Pengampu</option>';
+    teachers.forEach(function(t){
+      const name = t['Nama Guru'] || t.nama || t.name || t;
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      select.appendChild(option);
+    });
+    select.onchange = function(){ button.disabled = !select.value; };
+    if(!teachers.length){
+      tampilStatus('Tidak ditemukan guru yang mengampu mapel ini pada kelas tersebut.', 'warning');
+    }
+  });
+}
 
-  element.classList.add(
-    'selected'
-  );
-
-
+function pilihGuruDanLanjut(){
+  const select = document.getElementById('guruPengampu');
+  currentTeacher = select.value;
+  if(!currentTeacher){
+    tampilStatus('Silakan pilih guru pengampu.', 'warning');
+    return;
+  }
+  document.getElementById('guruSection').style.display = 'none';
   ambilSiswa();
-
 }
 
 
@@ -2440,6 +2511,10 @@ function ambilSiswa(){
     '&subject=' +
     encodeURIComponent(
       currentSubject
+    ) +
+    '&teacher=' +
+    encodeURIComponent(
+      currentTeacher
     );
 
 
@@ -2618,6 +2693,7 @@ function tampilkanSiswa(
   ).textContent =
     currentKelas +
     ' • ' +
+    (currentTeacher ? currentTeacher + ' • ' : '') +
     students.length +
     ' siswa';
 
@@ -4184,13 +4260,33 @@ function escapeHtml(
 }
 
 
+async function loadMasterData(){
+  if(!MASTER_API_URL || MASTER_API_URL.includes('ISI_URL')) return;
+  tampilLoading('Menghubungkan ke Master Data...');
+  requestJSONP(MASTER_API_URL + '?action=units', function(data){
+    sembunyikanLoading();
+    if(data && data.success !== false){
+      MASTER_DATA.units = data.data || [];
+      const sel = document.getElementById('jenjang');
+      const active = MASTER_DATA.units.filter(function(x){ return String(x.Status || x.status || 'Aktif') !== 'Nonaktif'; });
+      if(active.length){
+        sel.innerHTML = '<option value="">Pilih Jenjang</option>';
+        active.forEach(function(x){
+          const value = x['Nama Unit'] || x['Kode Unit'] || x.nama || x.name;
+          const o = document.createElement('option'); o.value=value; o.textContent=value; sel.appendChild(o);
+        });
+      }
+    }
+  });
+}
+
+
 /* =========================================================
    START
 ========================================================= */
 
-console.log(
-  'Raport Integrasi Pondok Modern Al-Ghozali aktif.'
-);
+console.log('Raport Integrasi Pondok Modern Al-Ghozali aktif.');
+loadMasterData();
 
 </script>
 
