@@ -1,6 +1,6 @@
 {
   "name": "Raport Integrasi Al-Ghozali",
-  "description": "Aplikasi Raport Integrasi Pondok Modern Al-Ghozali untuk pengolahan nilai dan cetak raport santri.",
+  "description": "Aplikasi Raport Integrasi Pondok Modern Al-Ghozali untuk pengolahan nilai, integrasi Google Sheets, dan arsip Cloud Firestore.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -14,6 +14,16 @@ app.use(express.static(__dirname));
 const distDir = path.join(__dirname, 'dist');
 app.use(express.static(distDir));
 
+// API: Firebase config endpoint
+app.get('/api/firebase-config', (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'firebase-applet-config.json');
+    res.sendFile(filePath);
+  } catch (err) {
+    res.status(404).json({ error: 'Firebase config unavailable' });
+  }
+});
+
 // Fallback to index.html for any SPA routes
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

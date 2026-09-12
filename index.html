@@ -13,9 +13,9 @@
 <title>
 Raport Integrasi | Pondok Modern Al-Ghozali
 </title>
-<meta name="description" content="Aplikasi Raport Integrasi Pondok Modern Al-Ghozali untuk pengolahan nilai dan cetak raport santri.">
+<meta name="description" content="Aplikasi Raport Integrasi Pondok Modern Al-Ghozali untuk pengolahan nilai, integrasi Google Sheets, dan arsip Cloud Firestore.">
 <meta property="og:title" content="Raport Integrasi | Pondok Modern Al-Ghozali">
-<meta property="og:description" content="Aplikasi Raport Integrasi Pondok Modern Al-Ghozali untuk pengolahan nilai dan cetak raport santri.">
+<meta property="og:description" content="Aplikasi Raport Integrasi Pondok Modern Al-Ghozali untuk pengolahan nilai, integrasi Google Sheets, dan arsip Cloud Firestore.">
 
 
 <!-- =========================================================
@@ -1004,6 +1004,153 @@ td:last-child{
 
 
 /* =========================================================
+   RINGKASAN NILAI / SCORE SUMMARY DASHBOARD
+========================================================= */
+
+.score-summary-container{
+
+  padding:
+    0 24px 20px 24px;
+
+}
+
+
+.score-summary-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(210px, 1fr));
+
+  gap:14px;
+
+}
+
+
+.score-summary-card{
+
+  padding:16px 18px;
+
+  border-radius:14px;
+
+  background:#ffffff;
+
+  border:
+    1px solid
+    var(--border);
+
+  box-shadow:
+    0 2px 8px
+    rgba(15,23,42,.04);
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:space-between;
+
+}
+
+
+.score-card-header{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-bottom:8px;
+
+}
+
+
+.score-card-title{
+
+  font-size:12px;
+
+  font-weight:800;
+
+  color:var(--muted);
+
+  text-transform:uppercase;
+
+  letter-spacing:.04em;
+
+}
+
+
+.score-badge{
+
+  font-size:11px;
+
+  font-weight:800;
+
+  padding:3px 8px;
+
+  border-radius:6px;
+
+}
+
+
+.score-badge-avg{
+
+  background:#ccfbf1;
+
+  color:#0f766e;
+
+}
+
+
+.score-badge-max{
+
+  background:#dcfce7;
+
+  color:#15803d;
+
+}
+
+
+.score-badge-min{
+
+  background:#fef3c7;
+
+  color:#b45309;
+
+}
+
+
+.score-card-value{
+
+  font-size:26px;
+
+  font-weight:900;
+
+  color:var(--text);
+
+  line-height:1.2;
+
+}
+
+
+.score-card-sub{
+
+  margin-top:6px;
+
+  font-size:12px;
+
+  color:var(--muted);
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+
+}
+
+
+/* =========================================================
    EXCEL IMPORT
 ========================================================= */
 
@@ -1231,6 +1378,244 @@ td:last-child{
 
 
 /* =========================================================
+   FIREBASE CLOUD INTEGRATION & MODAL
+========================================================= */
+
+.firebase-header-bar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.firebase-status-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.22);
+  color:#ffffff;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.3px;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 8px rgba(34,197,94,.6);
+}
+
+.firebase-user-box{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.firebase-user-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:4px 10px 4px 6px;
+  border-radius:999px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+}
+
+.firebase-avatar{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:var(--primary);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:900;
+  border:1px solid rgba(255,255,255,.4);
+  overflow:hidden;
+}
+
+.btn-firebase-login{
+  background:#ffffff;
+  color:#0f172a;
+  border:1px solid rgba(255,255,255,.3);
+  padding:7px 14px;
+  font-size:12px;
+  font-weight:800;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  min-height:34px;
+}
+
+.btn-firebase-login:hover{
+  background:#f8fafc;
+  transform:translateY(-1px);
+}
+
+.btn-firebase-logout{
+  background:rgba(255,255,255,.12);
+  color:#ffffff;
+  border:1px solid rgba(255,255,255,.25);
+  padding:4px 10px;
+  font-size:11px;
+  font-weight:800;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn-firebase-logout:hover{
+  background:rgba(239,68,68,.3);
+  border-color:rgba(239,68,68,.5);
+}
+
+.btn-firebase-history{
+  background:rgba(255,255,255,.12);
+  color:#ffffff;
+  border:1px solid rgba(255,255,255,.25);
+  padding:7px 13px;
+  font-size:12px;
+  font-weight:800;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  min-height:34px;
+}
+
+.btn-firebase-history:hover{
+  background:rgba(255,255,255,.22);
+  transform:translateY(-1px);
+}
+
+.btn-firebase{
+  color:#ffffff;
+  background:linear-gradient(135deg, #0d9488, #059669);
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.btn-firebase:hover{
+  background:linear-gradient(135deg, #0f766e, #047857);
+}
+
+/* MODAL STYLES */
+.modal-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(15,23,42,.6);
+  backdrop-filter:blur(3px);
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal-card{
+  background:#ffffff;
+  border-radius:18px;
+  width:100%;
+  max-width:760px;
+  max-height:85vh;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 20px 45px rgba(0,0,0,.22);
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+
+.modal-header{
+  padding:18px 24px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#f8fafc;
+}
+
+.modal-close{
+  background:transparent;
+  border:0;
+  font-size:26px;
+  color:#64748b;
+  cursor:pointer;
+  line-height:1;
+  padding:0;
+}
+
+.modal-close:hover{
+  color:#0f172a;
+}
+
+.modal-body{
+  padding:20px 24px;
+  overflow-y:auto;
+  flex:1;
+}
+
+.batch-item{
+  padding:15px 18px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#ffffff;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  transition:.15s;
+}
+
+.batch-item:hover{
+  border-color:#0d9488;
+  box-shadow:0 3px 12px rgba(13,148,136,.08);
+}
+
+.batch-title{
+  font-size:15px;
+  font-weight:900;
+  color:#0f172a;
+}
+
+.batch-meta{
+  margin-top:4px;
+  font-size:12px;
+  color:#64748b;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.batch-stats{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.batch-badge{
+  font-size:11px;
+  font-weight:800;
+  padding:4px 8px;
+  border-radius:6px;
+  background:#f1f5f9;
+  color:#334155;
+}
+
+/* =========================================================
    FOOTER
 ========================================================= */
 
@@ -1407,6 +1792,24 @@ td:last-child{
 
     </div>
 
+    <!-- Firebase Auth & Cloud Bar -->
+    <div id="firebaseHeaderBar" class="firebase-header-bar">
+      <div id="firebaseStatusBadge" class="firebase-status-badge" title="Status koneksi Cloud Firestore">
+        <span class="status-dot"></span>
+        <span id="firebaseStatusText">Cloud Firestore Siap</span>
+      </div>
+
+      <div id="firebaseUserBox" class="firebase-user-box">
+        <button id="btnGoogleLogin" class="btn btn-firebase-login" onclick="handleGoogleLogin()">
+          <svg width="15" height="15" viewBox="0 0 24 24" style="margin-right:6px;vertical-align:-2px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          Masuk dengan Google
+        </button>
+      </div>
+
+      <button id="btnOpenBatches" class="btn btn-firebase-history" onclick="openFirebaseBatchesModal()" title="Lihat riwayat batch nilai yang tersimpan di cloud">
+        📂 Riwayat Cloud
+      </button>
+    </div>
 
     <div class="year-badge">
       Tahun Pelajaran 2026–2027
@@ -1776,6 +2179,78 @@ td:last-child{
   </div>
 
 
+  <!-- =========================================================
+       RINGKASAN NILAI / SUMMARY DASHBOARD
+  ========================================================= -->
+
+  <div
+    id="scoreSummaryContainer"
+    class="score-summary-container"
+  >
+
+    <div class="score-summary-grid">
+
+      <div
+        id="scoreAvgCard"
+        class="score-summary-card"
+      >
+        <div class="score-card-header">
+          <span class="score-card-title">Rata-rata</span>
+          <span class="score-badge score-badge-avg">RATA-RATA</span>
+        </div>
+        <div
+          id="scoreAvg"
+          class="score-card-value"
+        >-</div>
+        <div
+          id="scoreCount"
+          class="score-card-sub"
+        >0 siswa dinilai</div>
+      </div>
+
+
+      <div
+        id="scoreMaxCard"
+        class="score-summary-card"
+      >
+        <div class="score-card-header">
+          <span class="score-card-title">Nilai Tertinggi</span>
+          <span class="score-badge score-badge-max">TERTINGGI</span>
+        </div>
+        <div
+          id="scoreMax"
+          class="score-card-value"
+        >-</div>
+        <div
+          id="scoreMaxStudent"
+          class="score-card-sub"
+        >-</div>
+      </div>
+
+
+      <div
+        id="scoreMinCard"
+        class="score-summary-card"
+      >
+        <div class="score-card-header">
+          <span class="score-card-title">Nilai Terendah</span>
+          <span class="score-badge score-badge-min">TERENDAH</span>
+        </div>
+        <div
+          id="scoreMin"
+          class="score-card-value"
+        >-</div>
+        <div
+          id="scoreMinStudent"
+          class="score-card-sub"
+        >-</div>
+      </div>
+
+    </div>
+
+  </div>
+
+
   <div class="table-wrapper">
 
     <table>
@@ -1819,7 +2294,16 @@ td:last-child{
         class="btn btn-primary"
         onclick="simpanManual()"
       >
-        💾 Simpan Nilai
+        💾 Simpan ke Sheets
+      </button>
+
+      <button
+        id="btnArchiveFirebase"
+        class="btn btn-firebase"
+        onclick="archiveGradesToFirebase()"
+        title="Simpan & arsipkan data nilai ke Google Cloud Firestore"
+      >
+        ☁️ Arsipkan ke Cloud
       </button>
 
     </div>
@@ -1971,6 +2455,29 @@ td:last-child{
 
 <div id="status"></div>
 
+<!-- =========================================================
+     FIREBASE ARCHIVE MODAL
+========================================================= -->
+<div id="firebaseBatchModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeFirebaseBatchesModal()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:16px;font-weight:900;color:#0f172a;display:flex;align-items:center;gap:8px;">
+          <span>☁️</span> Riwayat Arsip Cloud (Firestore)
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">
+          Data batch nilai yang tersimpan secara terpusat di cloud database Al-Ghozali
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeFirebaseBatchesModal()" title="Tutup">&times;</button>
+    </div>
+    <div class="modal-body" id="firebaseBatchesList">
+      <div style="text-align:center;padding:36px;color:var(--muted);font-size:13px;">
+        Memuat arsip nilai dari Cloud Firestore...
+      </div>
+    </div>
+  </div>
+</div>
 
 </main>
 
@@ -2478,6 +2985,8 @@ function tampilkanSiswa(
             input
           );
 
+          updateSummaryDashboard();
+
         }
       );
 
@@ -2488,6 +2997,9 @@ function tampilkanSiswa(
 
     }
   );
+
+
+  updateSummaryDashboard();
 
 
   document.getElementById(
@@ -3680,6 +4192,227 @@ function kembaliMapel(){
 
 
 /* =========================================================
+   RINGKASAN NILAI / SUMMARY DASHBOARD
+========================================================= */
+
+function updateSummaryDashboard(){
+
+  const inputs =
+    document.querySelectorAll(
+      '#siswaBody .nilai-input'
+    );
+
+  const avgEl =
+    document.getElementById(
+      'scoreAvg'
+    );
+
+  const maxEl =
+    document.getElementById(
+      'scoreMax'
+    );
+
+  const minEl =
+    document.getElementById(
+      'scoreMin'
+    );
+
+  const countEl =
+    document.getElementById(
+      'scoreCount'
+    );
+
+  const maxStudentEl =
+    document.getElementById(
+      'scoreMaxStudent'
+    );
+
+  const minStudentEl =
+    document.getElementById(
+      'scoreMinStudent'
+    );
+
+  if(
+    !avgEl ||
+    !maxEl ||
+    !minEl
+  ){
+    return;
+  }
+
+  if(
+    !inputs.length
+  ){
+    avgEl.textContent = '-';
+    maxEl.textContent = '-';
+    minEl.textContent = '-';
+    if(countEl) countEl.textContent = '0 siswa dinilai';
+    if(maxStudentEl) maxStudentEl.textContent = '-';
+    if(minStudentEl) minStudentEl.textContent = '-';
+    return;
+  }
+
+  const scores = [];
+  let maxScore = -Infinity;
+  let minScore = Infinity;
+  let maxStudents = [];
+  let minStudents = [];
+
+  inputs.forEach(
+    function(input){
+
+      const val =
+        input.value.trim();
+
+      if(
+        val === ''
+      ){
+        return;
+      }
+
+      const num =
+        Number(
+          val
+        );
+
+      if(
+        !isNaN(num) &&
+        num >= 0 &&
+        num <= 100
+      ){
+
+        scores.push(
+          num
+        );
+
+        const nama =
+          input.dataset.nama || '';
+
+        if(
+          num > maxScore
+        ){
+          maxScore = num;
+          maxStudents = nama ? [nama] : [];
+        }
+        else if(
+          num === maxScore &&
+          nama
+        ){
+          if(
+            maxStudents.length < 2 &&
+            !maxStudents.includes(nama)
+          ){
+            maxStudents.push(nama);
+          }
+        }
+
+        if(
+          num < minScore
+        ){
+          minScore = num;
+          minStudents = nama ? [nama] : [];
+        }
+        else if(
+          num === minScore &&
+          nama
+        ){
+          if(
+            minStudents.length < 2 &&
+            !minStudents.includes(nama)
+          ){
+            minStudents.push(nama);
+          }
+        }
+
+      }
+
+    }
+  );
+
+  if(
+    scores.length === 0
+  ){
+
+    avgEl.textContent = '-';
+    maxEl.textContent = '-';
+    minEl.textContent = '-';
+
+    if(countEl){
+      countEl.textContent =
+        'Belum ada nilai (' + inputs.length + ' siswa)';
+    }
+
+    if(maxStudentEl){
+      maxStudentEl.textContent = '-';
+      maxStudentEl.removeAttribute('title');
+    }
+
+    if(minStudentEl){
+      minStudentEl.textContent = '-';
+      minStudentEl.removeAttribute('title');
+    }
+
+  }
+  else{
+
+    const sum =
+      scores.reduce(
+        function(a, b){
+          return a + b;
+        },
+        0
+      );
+
+    const avg =
+      sum / scores.length;
+
+    const formattedAvg =
+      Number.isInteger(avg)
+        ? String(avg)
+        : avg.toFixed(2).replace(/\.?0+$/, '');
+
+    avgEl.textContent =
+      formattedAvg;
+
+    maxEl.textContent =
+      String(maxScore);
+
+    minEl.textContent =
+      String(minScore);
+
+    if(countEl){
+      countEl.textContent =
+        scores.length + ' dari ' + inputs.length + ' siswa dinilai';
+    }
+
+    if(maxStudentEl){
+      const maxText =
+        maxStudents.length > 0
+          ? maxStudents.join(', ')
+          : '-';
+      maxStudentEl.textContent =
+        maxText;
+      maxStudentEl.title =
+        maxText;
+    }
+
+    if(minStudentEl){
+      const minText =
+        minStudents.length > 0
+          ? minStudents.join(', ')
+          : '-';
+      minStudentEl.textContent =
+        minText;
+      minStudentEl.title =
+        minText;
+    }
+
+  }
+
+}
+
+
+/* =========================================================
    VALIDASI
 ========================================================= */
 
@@ -4076,7 +4809,215 @@ console.log(
   'Raport Integrasi Pondok Modern Al-Ghozali aktif.'
 );
 
+
+/* =========================================================
+   FIREBASE INTEGRATION BRIDGE
+========================================================= */
+
+let currentUser = null;
+
+function initFirebaseBridge() {
+  if (!window.AlGhozaliFirebase) {
+    setTimeout(initFirebaseBridge, 200);
+    return;
+  }
+
+  window.AlGhozaliFirebase.onAuthChange((user) => {
+    currentUser = user;
+    renderFirebaseUserUI(user);
+  });
+}
+
+function renderFirebaseUserUI(user) {
+  const userBox = document.getElementById('firebaseUserBox');
+  if (!userBox) return;
+
+  if (user) {
+    const displayName = user.displayName || user.email || 'Pengguna';
+    const initial = (displayName[0] || 'U').toUpperCase();
+    const photo = user.photoURL 
+      ? `<img src="${escapeHtml(user.photoURL)}" alt="${escapeHtml(displayName)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` 
+      : initial;
+
+    userBox.innerHTML = `
+      <div class="firebase-user-pill" title="${escapeHtml(user.email || '')}">
+        <div class="firebase-avatar">${photo}</div>
+        <span style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(displayName)}</span>
+        <button class="btn-firebase-logout" onclick="handleGoogleLogout()" title="Keluar">Keluar</button>
+      </div>
+    `;
+  } else {
+    userBox.innerHTML = `
+      <button id="btnGoogleLogin" class="btn btn-firebase-login" onclick="handleGoogleLogin()">
+        <svg width="15" height="15" viewBox="0 0 24 24" style="margin-right:6px;vertical-align:-2px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+        Masuk dengan Google
+      </button>
+    `;
+  }
+}
+
+async function handleGoogleLogin() {
+  try {
+    tampilStatus('Menghubungkan ke Google Login...', 'warning');
+    if (!window.AlGhozaliFirebase) throw new Error('Firebase belum siap');
+    const user = await window.AlGhozaliFirebase.loginWithGoogle();
+    tampilStatus(`Berhasil masuk sebagai ${user.displayName || user.email}`, 'success');
+  } catch (err) {
+    console.error('Google login error:', err);
+    tampilStatus('Gagal masuk Google: ' + (err.message || err), 'error');
+  }
+}
+
+async function handleGoogleLogout() {
+  try {
+    if (!window.AlGhozaliFirebase) return;
+    await window.AlGhozaliFirebase.logout();
+    tampilStatus('Berhasil keluar dari akun.', 'success');
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
+}
+
+async function archiveGradesToFirebase() {
+  if (!currentJenjang || !currentKelas || !currentSubject) {
+    tampilStatus('Pilih jenjang, kelas, dan mata pelajaran terlebih dahulu.', 'warning');
+    return;
+  }
+
+  const inputs = document.querySelectorAll('.nilai-input');
+  if (!inputs.length) {
+    tampilStatus('Tidak ada data siswa untuk diarsipkan.', 'warning');
+    return;
+  }
+
+  const items = [];
+  const validScores = [];
+
+  inputs.forEach(input => {
+    const rawVal = input.value.trim();
+    const studentName = input.dataset.nama || 'Siswa';
+    const num = Number(rawVal);
+    const hasVal = rawVal !== '' && !isNaN(num);
+    if (hasVal) validScores.push(num);
+
+    items.push({
+      nama: studentName,
+      nilai: hasVal ? num : null,
+      sudahDiisi: hasVal
+    });
+  });
+
+  const total = items.length;
+  const graded = validScores.length;
+  const avg = graded > 0 ? (validScores.reduce((a, b) => a + b, 0) / graded).toFixed(1) : 0;
+  const max = graded > 0 ? Math.max(...validScores) : 0;
+  const min = graded > 0 ? Math.min(...validScores) : 0;
+
+  if (!currentUser && window.AlGhozaliFirebase) {
+    const doLogin = confirm('Anda belum masuk dengan akun Google Al-Ghozali. Ingin masuk sekarang agar arsip tercatat dengan akun Anda?');
+    if (doLogin) {
+      try {
+        await handleGoogleLogin();
+      } catch (e) {}
+    }
+  }
+
+  const batchData = {
+    jenjang: currentJenjang,
+    kelas: currentKelas,
+    mapel: currentSubject,
+    totalSiswa: total,
+    jumlahTerisi: graded,
+    rataRata: Number(avg),
+    nilaiTertinggi: max,
+    nilaiTerendah: min,
+    siswa: items
+  };
+
+  const btn = document.getElementById('btnArchiveFirebase');
+  const originalText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Mengarsipkan ke Cloud...';
+  }
+
+  try {
+    tampilStatus('Mengunggah batch nilai ke Google Cloud Firestore...', 'warning');
+    const result = await window.AlGhozaliFirebase.saveGradeBatch(batchData);
+    tampilStatus(`✅ Berhasil! Batch nilai ${currentKelas} - ${currentSubject} telah diarsipkan ke Cloud Firestore (ID: ${result.id.slice(0, 8)}...)`, 'success');
+  } catch (err) {
+    console.error('Error saving to Firebase:', err);
+    tampilStatus('Gagal mengarsipkan ke Firestore: ' + (err.message || err), 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }
+}
+
+async function openFirebaseBatchesModal() {
+  const modal = document.getElementById('firebaseBatchModal');
+  const listEl = document.getElementById('firebaseBatchesList');
+  if (!modal || !listEl) return;
+
+  modal.style.display = 'flex';
+  listEl.innerHTML = '<div style="text-align:center;padding:36px;color:var(--muted);font-size:13px;">Mengambil data riwayat dari Cloud Firestore...</div>';
+
+  try {
+    if (!window.AlGhozaliFirebase) throw new Error('Firebase belum terinisialisasi');
+    const batches = await window.AlGhozaliFirebase.fetchMyBatches();
+
+    if (!batches || !batches.length) {
+      listEl.innerHTML = `
+        <div style="text-align:center;padding:40px 20px;color:var(--muted);">
+          <div style="font-size:36px;margin-bottom:8px;">📂</div>
+          <div style="font-weight:700;color:var(--text);margin-bottom:4px;">Belum Ada Arsip Nilai</div>
+          <p style="font-size:12px;margin:0;">Gunakan tombol "☁️ Arsipkan ke Cloud" pada tabel nilai siswa untuk menyimpan riwayat batch pertama Anda.</p>
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = batches.map(b => {
+      const dateStr = b.diarsipkanPada ? new Date(b.diarsipkanPada).toLocaleString('id-ID') : '-';
+      const userStr = b.userEmail || 'Anonim';
+      return `
+        <div class="batch-item">
+          <div>
+            <div class="batch-title">${escapeHtml(b.jenjang || '')} - ${escapeHtml(b.kelas || '')} : ${escapeHtml(b.mapel || '')}</div>
+            <div class="batch-meta">
+              <span>🕒 ${escapeHtml(dateStr)}</span>
+              <span>👤 ${escapeHtml(userStr)}</span>
+              <span>👥 ${b.jumlahTerisi || 0}/${b.totalSiswa || 0} Siswa</span>
+            </div>
+          </div>
+          <div class="batch-stats">
+            <span class="batch-badge" title="Rata-rata">Rata: <b>${b.rataRata || 0}</b></span>
+            <span class="batch-badge" title="Tertinggi" style="background:#dcfce7;color:#15803d;">Max: <b>${b.nilaiTertinggi || 0}</b></span>
+            <span class="batch-badge" title="Terendah" style="background:#fef3c7;color:#b45309;">Min: <b>${b.nilaiTerendah || 0}</b></span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    console.error('Fetch batches error:', err);
+    listEl.innerHTML = `<div style="text-align:center;padding:30px;color:var(--danger);font-size:13px;">Gagal memuat arsip: ${escapeHtml(err.message || String(err))}</div>`;
+  }
+}
+
+function closeFirebaseBatchesModal() {
+  const modal = document.getElementById('firebaseBatchModal');
+  if (modal) modal.style.display = 'none';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initFirebaseBridge();
+});
+
 </script>
+
+<script type="module" src="/firebase-init.js"></script>
 
 </body>
 </html>
