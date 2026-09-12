@@ -1,0 +1,6 @@
+{
+  "name": "Raport Integrasi Al-Ghozali",
+  "description": "Aplikasi Raport Integrasi Pondok Modern Al-Ghozali untuk pengolahan nilai dan cetak raport santri.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
