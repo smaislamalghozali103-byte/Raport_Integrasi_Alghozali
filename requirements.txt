@@ -7,3 +7,5 @@ gspread>=6.1
 google-auth>=2.35
 python-dotenv>=1.0
 Pillow>=10.0
+arabic-reshaper>=3.0.0
+python-bidi>=0.6.0
