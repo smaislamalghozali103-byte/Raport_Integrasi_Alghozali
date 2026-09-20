@@ -103,6 +103,16 @@ def get_gurus(unit=None):
                     WHERE g.status='Aktif' AND gu.unit=? ORDER BY g.nama""",(unit,))
     return q("SELECT * FROM guru WHERE status='Aktif' ORDER BY nama")
 
+def get_mapel_for_class(unit,kelas):
+    return q('SELECT m.id,m.nama,m.kode_mapel,k.urutan FROM kurikulum_mapel k JOIN mapel m ON m.id=k.mapel_id WHERE k.unit=? AND k.kelas=? ORDER BY k.urutan,m.nama',(unit,kelas))
+
+def upsert_kurikulum_mapel(mapel_id,unit,kelas,urutan=0):
+    with connect() as con:
+        con.execute('INSERT INTO kurikulum_mapel(mapel_id,unit,kelas,urutan) VALUES(?,?,?,?) ON CONFLICT(mapel_id,unit,kelas) DO UPDATE SET urutan=excluded.urutan',(mapel_id,unit,kelas,urutan))
+
+def display_unit(unit):
+    return 'SMA — FULL DAY / NON MUKIM' if unit=='SMA-FULL-DAY' else unit
+
 def get_mapel_for_guru(guru_id,unit):
     return q("""SELECT DISTINCT m.* FROM mapel m JOIN penugasan p ON p.mapel_id=m.id
                 WHERE p.guru_id=? AND p.unit=? ORDER BY m.nama""",(guru_id,unit))
@@ -112,8 +122,11 @@ def get_classes_for_guru_mapel(guru_id,mapel_id,unit):
                 WHERE guru_id=? AND mapel_id=? AND unit=? ORDER BY kelas""",
              (guru_id,mapel_id,unit))
 
-def get_students(unit,kelas):
-    return q("SELECT * FROM siswa WHERE unit=? AND kelas=? ORDER BY nama",(unit,kelas))
+def get_students(unit,kelas,jalur=None,tahun=None):
+    sql='SELECT * FROM siswa WHERE unit=? AND kelas=?'; params=[unit,kelas]
+    if jalur: sql+=' AND jalur=?'; params.append(jalur)
+    if tahun: sql+=' AND tahun_ajaran=?'; params.append(tahun)
+    return q(sql+' ORDER BY nama',tuple(params))
 
 def get_grade_map(unit,kelas,mapel_id,tahun):
     rows=q("SELECT siswa_id,nilai FROM nilai WHERE unit=? AND kelas=? AND mapel_id=? AND tahun_ajaran=?",
