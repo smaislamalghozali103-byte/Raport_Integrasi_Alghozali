@@ -121,7 +121,7 @@ def grade_editor(unit,kelas,mapel,guru,tahun):
     if upload:
         if st.button("🔎 PROSES & IMPORT EXCEL",key=f"import_{unit}_{kelas}_{mapel['id']}"):
             try:
-                rows=read_uploaded(upload); matched=0; skipped=0
+                rows=read_uploaded(upload); matched=0; skipped=0; items=[]
                 for r in rows:
                     sid=None
                     if r["id"] is not None and str(r["id"]).replace(".0","").isdigit():
@@ -132,11 +132,22 @@ def grade_editor(unit,kelas,mapel,guru,tahun):
                     if not sid and r["nama"]:
                         x=db.one("SELECT id FROM siswa WHERE lower(nama)=lower(?) AND unit=? AND kelas=?",(r["nama"],unit,kelas))
                         sid=x["id"] if x else None
-                    if sid:
-                        if r["nilai"] is not None: db.save_grade(sid,mapel["id"],guru["id"],unit,kelas,tahun,r["nilai"])
+                    if sid and r["nilai"] is not None:
+                        s=db.one("SELECT * FROM siswa WHERE id=?",(sid,))
+                        items.append({"studentId":str(sid),"classId":str(kelas),"className":str(kelas),"studentName":s["nama"],"nisn":s["nisn"] or s["nis"] or "","subjectId":str(mapel["id"]),"subjectName":mapel["nama"],"score":float(r["nilai"])})
                         matched+=1
-                    else: skipped+=1
-                st.success(f"Import selesai: {matched} cocok, {skipped} tidak cocok."); st.rerun()
+                    elif sid:
+                        matched+=1
+                    else:
+                        skipped+=1
+                if not items:
+                    st.warning("Tidak ada nilai yang cocok untuk dikirim.")
+                else:
+                    sync.save_subject_scores(items,kelas,kelas,mapel["id"],mapel["nama"],guru["nama"])
+                    for it in items:
+                        db.save_grade(int(it["studentId"]),mapel["id"],guru["id"],unit,kelas,tahun,it["score"])
+                    st.success(f"Import realtime selesai: {matched} cocok, {skipped} tidak cocok.")
+                    st.rerun()
             except Exception as e: st.error(f"Gagal import: {e}")
 
 def monitoring_cloud_ui(tahun, unit=None, kelas=None, title="📡 Monitoring Realtime"):
