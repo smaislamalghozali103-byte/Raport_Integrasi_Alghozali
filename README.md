@@ -32,9 +32,23 @@ Buat hash PIN admin dan simpan pada environment variable:
 ADMIN_PIN_HASH=
 ```
 
-Database aplikasi menggunakan SQLite lokal. Google Sheets tetap tersedia sebagai jalur sinkronisasi/rekap admin melalui service yang sudah disiapkan.
+Database aplikasi menggunakan SQLite lokal. Google Sheets tetap tersedia sebagai jalur sinkronisasi/rekap admin melalui service yang sudah disiapkan. **Firebase dan Vercel tidak digunakan dalam arsitektur Python ini.**
 
 ## Catatan data
 
 Nilai pada master siswa TypeScript tidak otomatis dianggap sebagai nilai raport. Master tersebut digunakan untuk identitas siswa dan struktur akademik. Nilai raport diinput melalui aplikasi/import Excel.
 
+
+## Arsitektur saat ini
+
+```
+Browser
+   ↓
+Streamlit / Python
+   ↓
+SQLite (database aplikasi)
+   ↓
+Google Sheets (opsional, rekap Admin)
+```
+
+Komponen legacy JavaScript, Firebase Authentication/Firestore, konfigurasi Firebase, dan artefak deployment Vercel telah dihapus dari branch Python.
