@@ -134,27 +134,56 @@ def login_page():
         st.subheader("👨‍🏫 LOGIN GURU")
         units=db.get_units()
         if not units:
-            st.warning("Database belum berisi master. Import master final terlebih dahulu.")
-            return
-        unit=st.selectbox("1. Jenjang",units)
-        gs=db.get_gurus(unit)
-        gm={f'{g["nama"]} — {g["kode_guru"] or "-"}':g for g in gs}
-        gn=st.selectbox("2. Nama Guru",list(gm) or ["Tidak ada guru"])
-        guru=gm.get(gn)
-        ms=db.get_mapel_for_guru(guru["id"],unit) if guru else []
-        mm={m["nama"]:m for m in ms}
-        mn=st.selectbox("3. Mata Pelajaran",list(mm) or ["Tidak ada mapel"])
-        if st.button("🚀 MASUK KE RAPORT",type="primary",use_container_width=True):
-            if guru and mn in mm:
-                st.session_state.update(role="guru",guru=dict(guru),unit=unit,mapel=dict(mm[mn]))
-                st.rerun()
+            st.warning("Master data belum dimuat. Jalankan seed_master.py setelah source_ts tersedia.")
+        else:
+            unit=st.selectbox("1. Jenjang / Unit",units)
+            gs=db.get_gurus(unit)
+            gm={g["nama"]:g for g in gs}
+            gn=st.selectbox("2. Nama Guru",list(gm) or ["Tidak ada guru"])
+            guru=gm.get(gn)
+            if guru:
+                maps=db.get_mapel_for_guru(guru["id"],unit)
+                mm={m["nama"]:m for m in maps}
+            else:
+                mm={}
+            mn=st.selectbox("3. Mata Pelajaran",list(mm) or ["Tidak ada mapel"])
+            pin_hash=db.get_guru_pin_hash(guru["id"]) if guru else None
+            if guru and not pin_hash:
+                st.info("🔑 Pendaftaran awal: buat PIN minimal 6 digit. PIN disimpan dalam bentuk hash.")
+                p1=st.text_input("Buat PIN Guru",type="password",max_chars=32)
+                p2=st.text_input("Ulangi PIN Guru",type="password",max_chars=32)
+                if st.button("🔐 DAFTARKAN PIN & MASUK",type="primary",use_container_width=True):
+                    if not p1.isdigit() or len(p1)<6:
+                        st.error("PIN harus berupa angka dan minimal 6 digit.")
+                    elif p1!=p2:
+                        st.error("Konfirmasi PIN tidak sama.")
+                    elif mn not in mm:
+                        st.warning("Pilih mata pelajaran terlebih dahulu.")
+                    else:
+                        db.set_guru_pin(guru["id"],bcrypt.hashpw(p1.encode(),bcrypt.gensalt()).decode())
+                        st.session_state.update(role="guru",guru=dict(guru),unit=unit,mapel=dict(mm[mn]))
+                        st.rerun()
+            elif guru:
+                pin=st.text_input("PIN Guru",type="password",max_chars=32)
+                if st.button("🚀 MASUK KE RAPORT",type="primary",use_container_width=True):
+                    valid=bool(pin_hash) and bcrypt.checkpw(pin.encode(),pin_hash.encode())
+                    if not valid:
+                        st.error("PIN Guru salah.")
+                    elif mn not in mm:
+                        st.warning("Pilih mata pelajaran terlebih dahulu.")
+                    else:
+                        st.session_state.update(role="guru",guru=dict(guru),unit=unit,mapel=dict(mm[mn]))
+                        st.rerun()
     with right:
         st.subheader("🔐 LOGIN ADMIN")
-        st.caption("PIN hanya untuk Admin.")
-        pin=st.text_input("PIN Admin",type="password")
+        st.caption("PIN Admin terpisah dari PIN Guru.")
+        pin=st.text_input("PIN Admin",type="password",key="admin_login_pin")
         if st.button("MASUK ADMIN",use_container_width=True):
-            if admin_ok(pin): st.session_state["role"]="admin"; st.rerun()
-            else: st.error("PIN Admin salah atau belum dikonfigurasi.")
+            if admin_ok(pin):
+                st.session_state["role"]="admin"
+                st.rerun()
+            else:
+                st.error("PIN Admin salah atau belum dikonfigurasi.")
         st.info("Admin mengelola master, monitoring, rekap, raport, dan sinkronisasi.")
 
 def admin_page():
