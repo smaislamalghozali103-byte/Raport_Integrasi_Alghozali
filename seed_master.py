@@ -22,7 +22,7 @@ def parse_students():
         if not p.exists(): continue
         for m in pat.finditer(p.read_text(encoding="utf-8")):
             yield {"id":m.group(1),"no":int(m.group(2)),"class_id":m.group(3),
-                   "nisn":m.group(4),"nama":m.group(6)}
+                   "nisn":m.group(4),"nama":m.group(6),"source":name}
 
 def parse_assignments():
     files=["teacherAssignmentsRekap.ts","teacherAssignmentsSMARekap.ts"]
@@ -59,7 +59,12 @@ def seed():
     teachers=set()
     grouped,teacher_no=parse_assignments()
     for r in parse_students():
-        unit="SMA" if r["class_id"] in {"1int","2int-a","2int-b","3int-a","3int-b","4a","4b","4c","5a","5b","5c","5d","6a","6b","6c","6d","x-a-fd","x-b-fd"} else "SMP"
+        if r["source"]=="masterStudents.ts":
+            unit="SMP"
+        elif "Intensif" in r["source"]:
+            unit="INTENSIF"
+        else:
+            unit="SMA"
         db.upsert_siswa("",r["nisn"],r["nama"],unit,r["class_id"])
     for code,name,unit in parse_subjects():
         db.upsert_mapel(code,name,unit)
