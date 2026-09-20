@@ -30,6 +30,10 @@ div[data-testid="stMetric"]{background:#fff;border:1px solid #dbe7df;border-radi
 </style>
 """,unsafe_allow_html=True)
 
+def is_full_day(unit): return unit=="SMA-FULL-DAY"
+
+def jalur_label(unit): return "FULL DAY / NON MUKIM" if is_full_day(unit) else "MUKIM"
+
 def header():
     st.markdown('<div class="brand"><div class="brand-icon">🏫</div><div><h1>RAPORT INTEGRASI</h1><p>Pondok Modern Al-Ghozali</p></div></div>',unsafe_allow_html=True)
 
@@ -42,23 +46,27 @@ def logout():
     st.rerun()
 
 def raport_ui(unit,kelas,tahun):
-    students=[dict(x) for x in db.get_students(unit,kelas)]
-    maps=db.q("""SELECT DISTINCT m.id,m.nama FROM mapel m JOIN nilai n ON n.mapel_id=m.id
-                 WHERE n.unit=? AND n.kelas=? AND n.tahun_ajaran=? ORDER BY m.nama""",(unit,kelas,tahun))
+    jalur="FULL_DAY" if is_full_day(unit) else "MUKIM"
+    students=[dict(x) for x in db.get_students(unit,kelas,jalur,tahun)]
+    maps=db.get_mapel_for_class(unit,kelas) if is_full_day(unit) else db.q("""SELECT DISTINCT m.id,m.nama FROM mapel m JOIN penugasan p ON p.mapel_id=m.id WHERE p.unit=? AND p.kelas=? ORDER BY m.nama""",(unit,kelas))
     names=[m["nama"] for m in maps]
+    if not students:
+        st.warning("Belum ada siswa untuk jalur/kelas ini."); return
+    if not names:
+        st.warning("Belum ada daftar mata pelajaran untuk kelas ini."); return
     grade_by={}
     for s in students:
-        rows=db.q("""SELECT m.nama,n.nilai FROM nilai n JOIN mapel m ON m.id=n.mapel_id
-                     WHERE n.siswa_id=? AND n.tahun_ajaran=?""",(s["id"],tahun))
+        rows=db.q("""SELECT m.nama,n.nilai FROM nilai n JOIN mapel m ON m.id=n.mapel_id WHERE n.siswa_id=? AND n.tahun_ajaran=?""",(s["id"],tahun))
         grade_by[s["id"]]={r["nama"]:r["nilai"] for r in rows}
-    pdf=build_report(students,grade_by,names,unit=unit,kelas=kelas,tahun=tahun)
-    st.download_button("📄 EXPORT RAPORT PDF",pdf,
-        file_name=f"Raport_{unit}_{kelas}_{tahun.replace('/','-')}.pdf",
-        mime="application/pdf",use_container_width=True)
-    st.caption("Untuk cetak fisik: buka PDF hasil export lalu pilih Print/Cetak.")
+    wali=db.q("""SELECT g.nama FROM wali_kelas w JOIN guru g ON g.id=w.guru_id WHERE w.unit=? AND w.kelas=? AND w.tahun_ajaran=? ORDER BY w.id LIMIT 1""",(unit,kelas,tahun))
+    wali_name=wali[0]["nama"] if wali else ""
+    st.info(f"Mode raport: {jalur_label(unit)} • Kelas {kelas}")
+    pdf=build_report(students,grade_by,names,unit=unit,kelas=kelas,tahun=tahun,jalur=jalur,wali_kelas=wali_name)
+    st.download_button("📄 EXPORT RAPORT PDF",pdf,file_name=f"Raport_{jalur}_{kelas}_{tahun.replace('/','-')}.pdf",mime="application/pdf",use_container_width=True)
+    st.caption("Setiap siswa dibuat satu halaman. Jumlah, rata-rata, dan peringkat dihitung otomatis.")
 
 def grade_editor(unit,kelas,mapel,guru,tahun):
-    students=db.get_students(unit,kelas)
+    students=db.get_students(unit,kelas,"FULL_DAY" if is_full_day(unit) else "MUKIM",tahun)
     if not students: st.warning("Belum ada siswa pada kelas ini."); return
     grades=db.get_grade_map(unit,kelas,mapel["id"],tahun)
     st.subheader(f"{mapel['nama']} — {kelas}")
@@ -109,7 +117,7 @@ def grade_editor(unit,kelas,mapel,guru,tahun):
 def guru_page():
     header(); guru=st.session_state["guru"]; unit=st.session_state["unit"]; mapel=st.session_state["mapel"]
     top1,top2=st.columns([5,1])
-    top1.success(f"👤 {guru['nama']} • {unit} • {mapel['nama']}")
+    top1.success(f"👤 {guru['nama']} • {jalur_label(unit)} • {mapel['nama']}")
     if top2.button("Keluar"): logout()
     tahun=st.text_input("Tahun Ajaran",value="2026/2027")
     classes=db.get_classes_for_guru_mapel(guru["id"],mapel["id"],unit)
@@ -143,7 +151,7 @@ def login_page():
         if not units:
             st.warning("Master data belum dimuat. Jalankan seed_master.py setelah source_ts tersedia.")
         else:
-            unit=st.selectbox("1. Jenjang / Unit",units)
+            unit=st.selectbox("1. Jalur / Unit",units,format_func=db.display_unit)
             gs=db.get_gurus(unit)
             gm={g["nama"]:g for g in gs}
             gn=st.selectbox("2. Nama Guru",list(gm) or ["Tidak ada guru"])
