@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS guru (
  id INTEGER PRIMARY KEY AUTOINCREMENT,
  kode_guru TEXT UNIQUE,
  nama TEXT NOT NULL,
+ pin_hash TEXT,
  unit TEXT,
  status TEXT DEFAULT 'Aktif'
 );
@@ -66,7 +67,11 @@ def connect():
     finally: con.close()
 
 def init_db():
-    with connect() as con: con.executescript(SCHEMA)
+    with connect() as con:
+        con.executescript(SCHEMA)
+        cols={r["name"] for r in con.execute("PRAGMA table_info(guru)").fetchall()}
+        if "pin_hash" not in cols:
+            con.execute("ALTER TABLE guru ADD COLUMN pin_hash TEXT")
 
 def q(sql,params=()):
     with connect() as con: return con.execute(sql,params).fetchall()
@@ -169,3 +174,11 @@ def upsert_wali(guru_id,unit,kelas,tahun):
         con.execute("""INSERT INTO wali_kelas(guru_id,unit,kelas,tahun_ajaran) VALUES(?,?,?,?)
         ON CONFLICT(guru_id,unit,kelas,tahun_ajaran) DO NOTHING""",
         (guru_id,unit,kelas,tahun))
+
+def set_guru_pin(guru_id,pin_hash):
+    with connect() as con:
+        con.execute("UPDATE guru SET pin_hash=? WHERE id=?",(pin_hash,guru_id))
+
+def get_guru_pin_hash(guru_id):
+    row=one("SELECT pin_hash FROM guru WHERE id=?",(guru_id,))
+    return row["pin_hash"] if row else None
