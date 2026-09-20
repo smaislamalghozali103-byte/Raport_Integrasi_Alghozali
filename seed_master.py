@@ -2,12 +2,15 @@ import re
 from pathlib import Path
 from collections import defaultdict
 import csv
+import base64
+import gzip
 import database as db
 
 ROOT=Path(__file__).parent/"data"/"source_ts"
 FULL_DAY_STUDENTS=Path(__file__).parent/"data"/"full_day_students.csv"
 FULL_DAY_SUBJECTS=Path(__file__).parent/"data"/"full_day_subjects.csv"
 FULL_DAY_SMP_STUDENTS=Path(__file__).parent/"data"/"full_day_smp_students.csv"
+FULL_DAY_SMP_PAYLOAD=Path(__file__).parent/"data"/"full_day_smp_students.csv.gz.b64"
 
 def read(name):
     return (ROOT/name).read_text(encoding="utf-8")
@@ -81,6 +84,9 @@ def seed_full_day_assignments(grouped, teacher_no):
             db.upsert_penugasan(g["id"],m["id"],fd_unit,fd_class,hours)
 
 def seed_full_day():
+    if not FULL_DAY_SMP_STUDENTS.exists() and FULL_DAY_SMP_PAYLOAD.exists():
+        raw=gzip.decompress(base64.b64decode(FULL_DAY_SMP_PAYLOAD.read_text(encoding="utf-8")))
+        FULL_DAY_SMP_STUDENTS.write_bytes(raw)
     if FULL_DAY_SMP_STUDENTS.exists():
         with FULL_DAY_SMP_STUDENTS.open(encoding="utf-8",newline="") as f:
             for r in csv.DictReader(f):
