@@ -37,7 +37,7 @@ div[data-testid="stMetric"]{background:#fff;border:1px solid #dbe7df;border-radi
 </style>
 """,unsafe_allow_html=True)
 
-def is_full_day(unit): return unit=="SMA-FULL-DAY"
+def is_full_day(unit): return unit in {"SMA-FULL-DAY","SMP-FULL-DAY"}
 
 def jalur_label(unit): return "FULL DAY" if is_full_day(unit) else "MUKIM"
 
