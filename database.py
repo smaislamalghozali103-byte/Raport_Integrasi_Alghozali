@@ -174,11 +174,13 @@ def add_guru_unit(guru_id,unit):
         with connect() as con:
             con.execute("INSERT OR IGNORE INTO guru_unit(guru_id,unit) VALUES(?,?)",(guru_id,unit))
 
-def upsert_siswa(nis,nisn,nama,unit,kelas):
+def upsert_siswa(nis,nisn,nama,unit,kelas,jalur="MUKIM",tahun_ajaran="2026/2027"):
     with connect() as con:
-        con.execute("""INSERT INTO siswa(nis,nisn,nama,unit,kelas) VALUES(?,?,?,?,?)
-        ON CONFLICT(nisn,unit,kelas) DO UPDATE SET nis=excluded.nis,nama=excluded.nama""",
-        (nis,nisn,nama,unit,kelas))
+        row=con.execute("SELECT id FROM siswa WHERE nisn=? AND unit=? AND kelas=?",(nisn or "",unit,kelas)).fetchone() if nisn else None
+        if row:
+            con.execute("UPDATE siswa SET nis=?,nama=?,jalur=?,tahun_ajaran=? WHERE id=?",(nis or "",nama,jalur,tahun_ajaran,row["id"]))
+        else:
+            con.execute("INSERT INTO siswa(nis,nisn,nama,unit,kelas,jalur,tahun_ajaran) VALUES(?,?,?,?,?,?,?)",(nis or "",nisn or "",nama,unit,kelas,jalur,tahun_ajaran))
 
 def upsert_mapel(kode,nama,unit):
     with connect() as con:
