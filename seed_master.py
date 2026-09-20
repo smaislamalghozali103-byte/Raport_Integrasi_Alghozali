@@ -57,6 +57,29 @@ def parse_wali():
     pat=re.compile(r"\{\s*no:\s*(\d+),\s*className:\s*(['\"])(.*?)\2,\s*waliName:\s*(['\"])(.*?)\4,\s*unit:\s*['\"]([^'\"]+)['\"],\s*gender:\s*['\"]([^'\"]+)['\"](?:,\s*classId:\s*['\"]([^'\"]+)['\"])?(?:,\s*levelLabel:\s*['\"]([^'\"]+)['\"])?",re.S)
     return [{"class_name":m.group(3),"wali":m.group(5),"unit":m.group(6),"class_id":m.group(8)} for m in pat.finditer(p.read_text(encoding="utf-8"))]
 
+def normalize_full_day_class(unit, kelas):
+    """Istilah sumber 'Non Mukim' diperlakukan sebagai FULL DAY."""
+    k=(kelas or "").strip()
+    if "non mukim" not in k.lower():
+        return None
+    k=re.sub(r"\s*Non\s+Mukim\s*", " ", k, flags=re.I).strip()
+    k=re.sub(r"\s+", " ", k)
+    return ("SMP-FULL-DAY" if unit=="SMP" else "SMA-FULL-DAY"), k
+
+def seed_full_day_assignments(grouped, teacher_no):
+    """Salin penugasan legacy Non Mukim ke unit FULL DAY."""
+    for (teacher,unit,subject,kelas),hours in grouped.items():
+        normalized=normalize_full_day_class(unit,kelas)
+        if not normalized:
+            continue
+        fd_unit,fd_class=normalized
+        db.upsert_guru(f"FD-G{teacher_no.get(teacher,0):03d}-{abs(hash(teacher))%10000}",teacher,fd_unit)
+        g=db.one("SELECT id FROM guru WHERE lower(nama)=lower(?)",(teacher,))
+        db.upsert_mapel(None,subject,fd_unit)
+        m=db.one("SELECT id FROM mapel WHERE nama=? AND unit=?",(subject,fd_unit))
+        if g and m:
+            db.upsert_penugasan(g["id"],m["id"],fd_unit,fd_class,hours)
+
 def seed_full_day():
     if FULL_DAY_SMP_STUDENTS.exists():
         with FULL_DAY_SMP_STUDENTS.open(encoding="utf-8",newline="") as f:
@@ -108,6 +131,7 @@ def seed():
         db.upsert_guru(f"W-{abs(hash(w['wali']))%100000}",w["wali"],w["unit"])
         g=db.one("SELECT id FROM guru WHERE lower(nama)=lower(?)",(w["wali"],))
         if g: db.upsert_wali(g["id"],w["unit"],w["class_id"] or w["class_name"],"2026/2027")
+    seed_full_day_assignments(grouped,teacher_no)
     seed_full_day()
     return {"students":len(db.q("SELECT id FROM siswa")),"teachers":len(db.q("SELECT id FROM guru")),
             "subjects":len(db.q("SELECT id FROM mapel")),"assignments":len(db.q("SELECT id FROM penugasan")),
