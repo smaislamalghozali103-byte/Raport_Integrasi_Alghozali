@@ -7,6 +7,7 @@ import database as db
 ROOT=Path(__file__).parent/"data"/"source_ts"
 FULL_DAY_STUDENTS=Path(__file__).parent/"data"/"full_day_students.csv"
 FULL_DAY_SUBJECTS=Path(__file__).parent/"data"/"full_day_subjects.csv"
+FULL_DAY_SMP_STUDENTS=Path(__file__).parent/"data"/"full_day_smp_students.csv"
 
 def read(name):
     return (ROOT/name).read_text(encoding="utf-8")
@@ -57,6 +58,13 @@ def parse_wali():
     return [{"class_name":m.group(3),"wali":m.group(5),"unit":m.group(6),"class_id":m.group(8)} for m in pat.finditer(p.read_text(encoding="utf-8"))]
 
 def seed_full_day():
+    if FULL_DAY_SMP_STUDENTS.exists():
+        with FULL_DAY_SMP_STUDENTS.open(encoding="utf-8",newline="") as f:
+            for r in csv.DictReader(f):
+                db.upsert_siswa(r.get("nis",""),r.get("nisn",""),r["nama"].strip(),
+                                 "SMP-FULL-DAY",r["kelas"].strip(),"FULL_DAY",
+                                 r.get("tahun_ajaran","2026/2027"))
+    if FULL_DAY_STUDENTS.exists():
     if FULL_DAY_STUDENTS.exists():
         with FULL_DAY_STUDENTS.open(encoding="utf-8",newline="") as f:
             for r in csv.DictReader(f):
@@ -105,6 +113,7 @@ def seed():
             "subjects":len(db.q("SELECT id FROM mapel")),"assignments":len(db.q("SELECT id FROM penugasan")),
             "wali":len(db.q("SELECT id FROM wali_kelas")),
             "full_day_students":len(db.q("SELECT id FROM siswa WHERE jalur='FULL_DAY'")),
+            "full_day_smp_students":len(db.q("SELECT id FROM siswa WHERE unit='SMP-FULL-DAY'")),
             "full_day_subjects":len(db.q("SELECT id FROM mapel WHERE unit='SMA-FULL-DAY'"))}
 
 if __name__=="__main__":
