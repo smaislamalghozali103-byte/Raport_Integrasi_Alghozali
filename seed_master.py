@@ -88,7 +88,6 @@ def seed_full_day():
                                  "SMP-FULL-DAY",r["kelas"].strip(),"FULL_DAY",
                                  r.get("tahun_ajaran","2026/2027"))
     if FULL_DAY_STUDENTS.exists():
-    if FULL_DAY_STUDENTS.exists():
         with FULL_DAY_STUDENTS.open(encoding="utf-8",newline="") as f:
             for r in csv.DictReader(f):
                 fd_key=f"FD-{r['kelas'].strip()}-{r.get('no','')}"
