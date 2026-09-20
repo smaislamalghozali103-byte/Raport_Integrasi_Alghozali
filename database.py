@@ -2,39 +2,57 @@ import sqlite3
 from pathlib import Path
 from contextlib import contextmanager
 
-DB_PATH = Path("data/app.db")
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+DB_PATH=Path("data/app.db")
+DB_PATH.parent.mkdir(parents=True,exist_ok=True)
 
-SCHEMA = """
+SCHEMA="""
 CREATE TABLE IF NOT EXISTS guru (
- id INTEGER PRIMARY KEY AUTOINCREMENT, kode_guru TEXT UNIQUE, nama TEXT NOT NULL,
- unit TEXT, status TEXT DEFAULT 'Aktif'
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ kode_guru TEXT UNIQUE,
+ nama TEXT NOT NULL,
+ unit TEXT,
+ status TEXT DEFAULT 'Aktif'
+);
+CREATE TABLE IF NOT EXISTS guru_unit (
+ guru_id INTEGER NOT NULL,
+ unit TEXT NOT NULL,
+ PRIMARY KEY(guru_id,unit),
+ FOREIGN KEY(guru_id) REFERENCES guru(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS siswa (
- id INTEGER PRIMARY KEY AUTOINCREMENT, nis TEXT, nisn TEXT, nama TEXT NOT NULL,
- unit TEXT, kelas TEXT NOT NULL, UNIQUE(nisn, unit, kelas)
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ nis TEXT, nisn TEXT, nama TEXT NOT NULL,
+ unit TEXT, kelas TEXT NOT NULL,
+ UNIQUE(nisn,unit,kelas)
 );
 CREATE TABLE IF NOT EXISTS mapel (
- id INTEGER PRIMARY KEY AUTOINCREMENT, kode_mapel TEXT, nama TEXT NOT NULL,
- unit TEXT, UNIQUE(nama, unit)
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ kode_mapel TEXT, nama TEXT NOT NULL,
+ unit TEXT, UNIQUE(nama,unit)
 );
 CREATE TABLE IF NOT EXISTS penugasan (
- id INTEGER PRIMARY KEY AUTOINCREMENT, guru_id INTEGER NOT NULL, mapel_id INTEGER NOT NULL,
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ guru_id INTEGER NOT NULL, mapel_id INTEGER NOT NULL,
  unit TEXT, kelas TEXT NOT NULL, jumlah_jam REAL DEFAULT 0,
  UNIQUE(guru_id,mapel_id,unit,kelas),
- FOREIGN KEY(guru_id) REFERENCES guru(id), FOREIGN KEY(mapel_id) REFERENCES mapel(id)
+ FOREIGN KEY(guru_id) REFERENCES guru(id),
+ FOREIGN KEY(mapel_id) REFERENCES mapel(id)
 );
 CREATE TABLE IF NOT EXISTS wali_kelas (
- id INTEGER PRIMARY KEY AUTOINCREMENT, guru_id INTEGER NOT NULL, unit TEXT, kelas TEXT NOT NULL,
- tahun_ajaran TEXT, UNIQUE(guru_id,unit,kelas,tahun_ajaran),
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ guru_id INTEGER NOT NULL, unit TEXT, kelas TEXT NOT NULL,
+ tahun_ajaran TEXT,
+ UNIQUE(guru_id,unit,kelas,tahun_ajaran),
  FOREIGN KEY(guru_id) REFERENCES guru(id)
 );
 CREATE TABLE IF NOT EXISTS nilai (
- id INTEGER PRIMARY KEY AUTOINCREMENT, siswa_id INTEGER NOT NULL, mapel_id INTEGER NOT NULL,
- guru_id INTEGER, unit TEXT, kelas TEXT NOT NULL, tahun_ajaran TEXT NOT NULL, nilai REAL,
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ siswa_id INTEGER NOT NULL, mapel_id INTEGER NOT NULL, guru_id INTEGER,
+ unit TEXT, kelas TEXT NOT NULL, tahun_ajaran TEXT NOT NULL, nilai REAL,
  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
  UNIQUE(siswa_id,mapel_id,tahun_ajaran),
- FOREIGN KEY(siswa_id) REFERENCES siswa(id), FOREIGN KEY(mapel_id) REFERENCES mapel(id),
+ FOREIGN KEY(siswa_id) REFERENCES siswa(id),
+ FOREIGN KEY(mapel_id) REFERENCES mapel(id),
  FOREIGN KEY(guru_id) REFERENCES guru(id)
 );
 """
@@ -57,16 +75,17 @@ def one(sql,params=()):
     with connect() as con: return con.execute(sql,params).fetchone()
 
 def get_units():
-    rows=q("""SELECT unit FROM guru WHERE unit IS NOT NULL AND trim(unit)<>''
+    rows=q("""SELECT unit FROM guru_unit WHERE trim(unit)<>''
               UNION SELECT unit FROM siswa WHERE unit IS NOT NULL AND trim(unit)<>''
               UNION SELECT unit FROM mapel WHERE unit IS NOT NULL AND trim(unit)<>''
               ORDER BY unit""")
     return [r["unit"] for r in rows]
 
 def get_gurus(unit=None):
-    sql="SELECT * FROM guru WHERE status='Aktif'"; p=[]
-    if unit: sql+=" AND unit=?"; p.append(unit)
-    sql+=" ORDER BY nama"; return q(sql,p)
+    if unit:
+        return q("""SELECT g.* FROM guru g JOIN guru_unit gu ON gu.guru_id=g.id
+                    WHERE g.status='Aktif' AND gu.unit=? ORDER BY g.nama""",(unit,))
+    return q("SELECT * FROM guru WHERE status='Aktif' ORDER BY nama")
 
 def get_mapel_for_guru(guru_id,unit):
     return q("""SELECT DISTINCT m.* FROM mapel m JOIN penugasan p ON p.mapel_id=m.id
@@ -74,7 +93,8 @@ def get_mapel_for_guru(guru_id,unit):
 
 def get_classes_for_guru_mapel(guru_id,mapel_id,unit):
     return q("""SELECT DISTINCT kelas FROM penugasan
-                WHERE guru_id=? AND mapel_id=? AND unit=? ORDER BY kelas""",(guru_id,mapel_id,unit))
+                WHERE guru_id=? AND mapel_id=? AND unit=? ORDER BY kelas""",
+             (guru_id,mapel_id,unit))
 
 def get_students(unit,kelas):
     return q("SELECT * FROM siswa WHERE unit=? AND kelas=? ORDER BY nama",(unit,kelas))
@@ -107,9 +127,23 @@ def monitoring(unit,kelas,tahun):
 
 def upsert_guru(kode,nama,unit="",status="Aktif"):
     with connect() as con:
-        con.execute("""INSERT INTO guru(kode_guru,nama,unit,status) VALUES(?,?,?,?)
-        ON CONFLICT(kode_guru) DO UPDATE SET nama=excluded.nama,unit=excluded.unit,status=excluded.status""",
-        (kode or None,nama,unit,status))
+        row=con.execute("SELECT id FROM guru WHERE lower(nama)=lower(?)",(nama,)).fetchone()
+        if row:
+            gid=row["id"]
+            con.execute("UPDATE guru SET kode_guru=COALESCE(kode_guru,?),status=? WHERE id=?",
+                        (kode,status,gid))
+        else:
+            con.execute("INSERT INTO guru(kode_guru,nama,unit,status) VALUES(?,?,?,?)",
+                        (kode,nama,unit,status))
+            gid=con.execute("SELECT last_insert_rowid()").fetchone()[0]
+        if unit:
+            con.execute("INSERT OR IGNORE INTO guru_unit(guru_id,unit) VALUES(?,?)",(gid,unit))
+        return gid
+
+def add_guru_unit(guru_id,unit):
+    if unit:
+        with connect() as con:
+            con.execute("INSERT OR IGNORE INTO guru_unit(guru_id,unit) VALUES(?,?)",(guru_id,unit))
 
 def upsert_siswa(nis,nisn,nama,unit,kelas):
     with connect() as con:
@@ -125,6 +159,7 @@ def upsert_mapel(kode,nama,unit):
 
 def upsert_penugasan(guru_id,mapel_id,unit,kelas,jumlah_jam=0):
     with connect() as con:
+        con.execute("INSERT OR IGNORE INTO guru_unit(guru_id,unit) VALUES(?,?)",(guru_id,unit))
         con.execute("""INSERT INTO penugasan(guru_id,mapel_id,unit,kelas,jumlah_jam) VALUES(?,?,?,?,?)
         ON CONFLICT(guru_id,mapel_id,unit,kelas) DO UPDATE SET jumlah_jam=excluded.jumlah_jam""",
         (guru_id,mapel_id,unit,kelas,jumlah_jam or 0))
@@ -132,4 +167,5 @@ def upsert_penugasan(guru_id,mapel_id,unit,kelas,jumlah_jam=0):
 def upsert_wali(guru_id,unit,kelas,tahun):
     with connect() as con:
         con.execute("""INSERT INTO wali_kelas(guru_id,unit,kelas,tahun_ajaran) VALUES(?,?,?,?)
-        ON CONFLICT(guru_id,unit,kelas,tahun_ajaran) DO NOTHING""",(guru_id,unit,kelas,tahun))
+        ON CONFLICT(guru_id,unit,kelas,tahun_ajaran) DO NOTHING""",
+        (guru_id,unit,kelas,tahun))
