@@ -319,13 +319,23 @@ def admin_page():
             classes=sorted({x["kelas"] for x in db.q("SELECT DISTINCT kelas FROM siswa WHERE unit=?",(unit,))})
             if classes: raport_ui(unit,st.selectbox("Kelas",classes,key="admin_rap_kelas"),tahun)
     with tabs[8]:
-        st.markdown('<div class="section-card"><div class="kicker">REKAPITULASI RESMI</div><h3 style="margin:.2rem 0">Kelompok Mata Pelajaran</h3><p style="color:#64748b;margin:0">Referensi Tahun Ajaran 2026/2027: mata pelajaran, unit, guru pengampu, daftar kelas, jumlah kelas, dan total jam.</p></div>',unsafe_allow_html=True)
-        rp=Path("data/rekap_mapel_2026_2027.csv")
-        if rp.exists():
-            rdf=pd.read_csv(rp)
+        st.markdown('<div class="section-card"><div class="kicker">REKAPITULASI</div><h3 style="margin:.2rem 0">Kelompok Mata Pelajaran</h3><p style="color:#64748b;margin:0">Rekap dinamis dari master penugasan aplikasi untuk Tahun Ajaran 2026/2027.</p></div>',unsafe_allow_html=True)
+        recap=db.q("""SELECT m.nama AS mata_pelajaran,p.unit,
+                     GROUP_CONCAT(DISTINCT g.nama) AS guru_pengampu,
+                     GROUP_CONCAT(DISTINCT p.kelas) AS daftar_kelas,
+                     COUNT(DISTINCT p.kelas) AS jumlah_kelas_diajar,
+                     COALESCE(SUM(p.jumlah_jam),0) AS total_jam_mengajar
+                     FROM penugasan p
+                     JOIN mapel m ON m.id=p.mapel_id
+                     JOIN guru g ON g.id=p.guru_id
+                     GROUP BY p.unit,m.id
+                     ORDER BY p.unit,m.nama""")
+        if recap:
+            rdf=pd.DataFrame([dict(r) for r in recap])
+            rdf.columns=["Mata Pelajaran","Unit","Guru Pengampu","Daftar Kelas","Jumlah Kelas Diajar","Total Jam Mengajar"]
             st.dataframe(rdf,use_container_width=True,hide_index=True)
-            st.download_button("📥 UNDUH REKAP MAPEL",rp.read_bytes(),file_name=rp.name,mime="text/csv",use_container_width=True)
-        else: st.warning("File rekap_mapel_2026_2027.csv belum tersedia.")
+        else:
+            st.info("Belum ada data penugasan untuk direkap.")
     with tabs[9]:
         st.markdown('<div class="section-card"><div class="kicker">ADMIN CONTROL CENTER</div><h3 style="margin:.2rem 0">Pengaturan & Sinkronisasi</h3><p style="color:#64748b">Kelola koneksi Apps Script dan pastikan setiap nilai tersimpan ke Spreadsheet.</p></div>',unsafe_allow_html=True)
         endpoint=st.text_input("Google Apps Script Web App URL",value=sync.get_endpoint(),key="admin_endpoint")
