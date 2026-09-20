@@ -56,6 +56,24 @@ def parse_wali():
     pat=re.compile(r"\{\s*no:\s*(\d+),\s*className:\s*(['\"])(.*?)\2,\s*waliName:\s*(['\"])(.*?)\4,\s*unit:\s*['\"]([^'\"]+)['\"],\s*gender:\s*['\"]([^'\"]+)['\"](?:,\s*classId:\s*['\"]([^'\"]+)['\"])?(?:,\s*levelLabel:\s*['\"]([^'\"]+)['\"])?",re.S)
     return [{"class_name":m.group(3),"wali":m.group(5),"unit":m.group(6),"class_id":m.group(8)} for m in pat.finditer(p.read_text(encoding="utf-8"))]
 
+def seed_full_day():
+    if FULL_DAY_STUDENTS.exists():
+        with FULL_DAY_STUDENTS.open(encoding="utf-8",newline="") as f:
+            for r in csv.DictReader(f):
+                fd_key=f"FD-{r["kelas"].strip()}-{r.get("no","")}"
+                db.upsert_siswa(r.get("no",""),fd_key,r["nama"].strip(),"SMA-FULL-DAY",r["kelas"].strip(),"FULL_DAY",r.get("tahun_ajaran","2026/2027"))
+    if FULL_DAY_SUBJECTS.exists():
+        with FULL_DAY_SUBJECTS.open(encoding="utf-8",newline="") as f:
+            for r in csv.DictReader(f):
+                name=r["nama_mapel"].strip()
+                db.upsert_mapel(r["kode_mapel"],name,"SMA-FULL-DAY")
+                m=db.one("SELECT id FROM mapel WHERE nama=? AND unit=?",(name,"SMA-FULL-DAY"))
+                if m:
+                    targets=[r["kelas"].strip()]
+                    if targets[0]=="X": targets=["X-A","X-B"]
+                    for target in targets:
+                        db.upsert_kurikulum_mapel(m["id"],"SMA-FULL-DAY",target,int(r.get("no") or 0))
+
 def seed():
     db.init_db()
     if not ROOT.exists(): raise FileNotFoundError(f"Folder master tidak ditemukan: {ROOT}")
@@ -82,9 +100,12 @@ def seed():
         db.upsert_guru(f"W-{abs(hash(w['wali']))%100000}",w["wali"],w["unit"])
         g=db.one("SELECT id FROM guru WHERE lower(nama)=lower(?)",(w["wali"],))
         if g: db.upsert_wali(g["id"],w["unit"],w["class_id"] or w["class_name"],"2026/2027")
+    seed_full_day()
     return {"students":len(db.q("SELECT id FROM siswa")),"teachers":len(db.q("SELECT id FROM guru")),
             "subjects":len(db.q("SELECT id FROM mapel")),"assignments":len(db.q("SELECT id FROM penugasan")),
-            "wali":len(db.q("SELECT id FROM wali_kelas"))}
+            "wali":len(db.q("SELECT id FROM wali_kelas")),
+            "full_day_students":len(db.q("SELECT id FROM siswa WHERE jalur='FULL_DAY'")),
+            "full_day_subjects":len(db.q("SELECT id FROM mapel WHERE unit='SMA-FULL-DAY'"))}
 
 if __name__=="__main__":
     print(seed())
