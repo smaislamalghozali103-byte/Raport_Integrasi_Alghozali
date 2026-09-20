@@ -11,7 +11,8 @@ from pdf_report import build_report
 
 load_dotenv()
 db.init_db()
-if not db.q("SELECT id FROM siswa LIMIT 1") and Path("data/source_ts").exists():
+needs_seed = (not db.q("SELECT id FROM siswa LIMIT 1")) or (not db.q("SELECT id FROM siswa WHERE jalur='FULL_DAY' LIMIT 1") and Path("data/full_day_students.csv").exists())
+if needs_seed:
     try:
         seed_master_data()
     except Exception as exc:
