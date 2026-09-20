@@ -52,3 +52,14 @@ Google Sheets (opsional, rekap Admin)
 ```
 
 Komponen legacy JavaScript, Firebase Authentication/Firestore, konfigurasi Firebase, dan artefak deployment Vercel telah dihapus dari branch Python.
+
+
+## Realtime nilai & monitoring
+
+- Guru hanya melihat jenjang/unit, mata pelajaran, dan kelas yang berasal dari penugasannya.
+- Saat guru menekan **Simpan & Sinkronkan**, nilai dikirim langsung ke Google Apps Script lalu ditulis ke Google Spreadsheet.
+- **Guru mapel** dapat melihat dashboard status/progres input seluruh kelas, tetapi tidak melihat angka nilai guru lain.
+- **Wali kelas** dapat membuka nilai realtime kelasnya dari Spreadsheet.
+- **Admin** memiliki dashboard seluruh data dan menu **Pengaturan & Sinkronisasi**.
+- SQLite tetap digunakan sebagai cache/data aplikasi, sedangkan Google Spreadsheet menjadi sumber bersama untuk transaksi nilai.
+- Endpoint Apps Script disimpan di tabel `app_settings` dan dapat diubah Admin tanpa mengubah kode aplikasi.
