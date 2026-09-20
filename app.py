@@ -39,7 +39,7 @@ div[data-testid="stMetric"]{background:#fff;border:1px solid #dbe7df;border-radi
 
 def is_full_day(unit): return unit=="SMA-FULL-DAY"
 
-def jalur_label(unit): return "FULL DAY / NON MUKIM" if is_full_day(unit) else "MUKIM"
+def jalur_label(unit): return "FULL DAY" if is_full_day(unit) else "MUKIM"
 
 def header():
     st.markdown('<div class="brand"><div class="brand-icon">🏫</div><div><h1>RAPORT INTEGRASI</h1><p>Pondok Modern Al-Ghozali</p></div></div>',unsafe_allow_html=True)
@@ -284,7 +284,7 @@ def admin_page():
     a,b=st.columns([5,1]); a.success("🔐 ADMINISTRATOR — Akses penuh")
     if b.button("Keluar"): logout()
     tahun=st.text_input("Tahun Ajaran",value="2026/2027",key="admin_year")
-    tabs=st.tabs(["📊 Dashboard","👨‍🏫 Guru","👨‍🎓 Siswa","📚 Mapel","📋 Penugasan","🏫 Wali Kelas","📈 Monitoring","📄 Raport","⚙️ Pengaturan"])
+    tabs=st.tabs(["📊 Dashboard","👨‍🏫 Guru","👨‍🎓 Siswa","📚 Mapel","📋 Penugasan","🏫 Wali Kelas","📈 Monitoring","📄 Raport","📚 Rekap Mapel","⚙️ Pengaturan"])
     with tabs[0]:
         a,b,c,d=st.columns(4)
         a.metric("Guru",len(db.get_gurus())); b.metric("Siswa",len(db.q("SELECT id FROM siswa")))
@@ -319,6 +319,14 @@ def admin_page():
             classes=sorted({x["kelas"] for x in db.q("SELECT DISTINCT kelas FROM siswa WHERE unit=?",(unit,))})
             if classes: raport_ui(unit,st.selectbox("Kelas",classes,key="admin_rap_kelas"),tahun)
     with tabs[8]:
+        st.markdown('<div class="section-card"><div class="kicker">REKAPITULASI RESMI</div><h3 style="margin:.2rem 0">Kelompok Mata Pelajaran</h3><p style="color:#64748b;margin:0">Referensi Tahun Ajaran 2026/2027: mata pelajaran, unit, guru pengampu, daftar kelas, jumlah kelas, dan total jam.</p></div>',unsafe_allow_html=True)
+        rp=Path("data/rekap_mapel_2026_2027.csv")
+        if rp.exists():
+            rdf=pd.read_csv(rp)
+            st.dataframe(rdf,use_container_width=True,hide_index=True)
+            st.download_button("📥 UNDUH REKAP MAPEL",rp.read_bytes(),file_name=rp.name,mime="text/csv",use_container_width=True)
+        else: st.warning("File rekap_mapel_2026_2027.csv belum tersedia.")
+    with tabs[9]:
         st.markdown('<div class="section-card"><div class="kicker">ADMIN CONTROL CENTER</div><h3 style="margin:.2rem 0">Pengaturan & Sinkronisasi</h3><p style="color:#64748b">Kelola koneksi Apps Script dan pastikan setiap nilai tersimpan ke Spreadsheet.</p></div>',unsafe_allow_html=True)
         endpoint=st.text_input("Google Apps Script Web App URL",value=sync.get_endpoint(),key="admin_endpoint")
         x,y=st.columns(2)
