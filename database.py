@@ -6,6 +6,10 @@ DB_PATH=Path("data/app.db")
 DB_PATH.parent.mkdir(parents=True,exist_ok=True)
 
 SCHEMA="""
+CREATE TABLE IF NOT EXISTS app_settings (
+ key TEXT PRIMARY KEY,
+ value TEXT
+);
 CREATE TABLE IF NOT EXISTS guru (
  id INTEGER PRIMARY KEY AUTOINCREMENT,
  kode_guru TEXT UNIQUE,
@@ -208,3 +212,13 @@ def set_guru_pin(guru_id,pin_hash):
 def get_guru_pin_hash(guru_id):
     row=one("SELECT pin_hash FROM guru WHERE id=?",(guru_id,))
     return row["pin_hash"] if row else None
+
+
+def get_setting(key, default=None):
+    row = one("SELECT value FROM app_settings WHERE key=?", (key,))
+    return row["value"] if row and row["value"] is not None else default
+
+def set_setting(key, value):
+    with connect() as con:
+        con.execute("""INSERT INTO app_settings(key,value) VALUES(?,?)
+        ON CONFLICT(key) DO UPDATE SET value=excluded.value""", (key, value))
