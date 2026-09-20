@@ -15,6 +15,11 @@ X,13,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-13
 X,14,SBY/PKWU (Life Skill),FD-14
 X,15,Basa Sunda (Muatan Lokal),FD-15
 X,16,Informatika,FD-16
+X,17,Al Quran,FD-U01
+X,18,Hadis,FD-U02
+X,19,Fikih,FD-U03
+X,20,Bahasa Arab,FD-U04
+X,21,Tahfidz,FD-U05
 XI-IPA,1,Pendidikan Agama dan Budi Pekerti (PAI),FD-01
 XI-IPA,2,Pendidikan Pancasila dan Kewarganegaraan,FD-02
 XI-IPA,3,Bahasa Indonesia,FD-03
@@ -29,6 +34,11 @@ XI-IPA,11,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-11
 XI-IPA,12,SBY/PKWU (Life Skill),FD-12
 XI-IPA,13,Basa Sunda (Muatan Lokal),FD-13
 XI-IPA,14,Informatika,FD-14
+XI-IPA,15,Al Quran,FD-U01
+XI-IPA,16,Hadis,FD-U02
+XI-IPA,17,Fikih,FD-U03
+XI-IPA,18,Bahasa Arab,FD-U04
+XI-IPA,19,Tahfidz,FD-U05
 XI-IPS,1,Pendidikan Agama dan Budi Pekerti (PAI),FD-01
 XI-IPS,2,Pendidikan Pancasila dan Kewarganegaraan,FD-02
 XI-IPS,3,Bahasa Indonesia,FD-03
@@ -43,6 +53,11 @@ XI-IPS,11,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-11
 XI-IPS,12,SBY/PKWU (Life Skill),FD-12
 XI-IPS,13,Basa Sunda (Muatan Lokal),FD-13
 XI-IPS,14,Informatika,FD-14
+XI-IPS,15,Al Quran,FD-U01
+XI-IPS,16,Hadis,FD-U02
+XI-IPS,17,Fikih,FD-U03
+XI-IPS,18,Bahasa Arab,FD-U04
+XI-IPS,19,Tahfidz,FD-U05
 XII-IPA,1,Pendidikan Agama dan Budi Pekerti (PAI),FD-01
 XII-IPA,2,Pendidikan Pancasila dan Kewarganegaraan,FD-02
 XII-IPA,3,Bahasa Indonesia,FD-03
@@ -57,6 +72,11 @@ XII-IPA,11,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-11
 XII-IPA,12,SBY/PKWU (Life Skill),FD-12
 XII-IPA,13,Basa Sunda (Muatan Lokal),FD-13
 XII-IPA,14,Informatika,FD-14
+XII-IPA,15,Al Quran,FD-U01
+XII-IPA,16,Hadis,FD-U02
+XII-IPA,17,Fikih,FD-U03
+XII-IPA,18,Bahasa Arab,FD-U04
+XII-IPA,19,Tahfidz,FD-U05
 XII-IPS,1,Pendidikan Agama dan Budi Pekerti (PAI),FD-01
 XII-IPS,2,Pendidikan Pancasila dan Kewarganegaraan,FD-02
 XII-IPS,3,Bahasa Indonesia,FD-03
@@ -71,3 +91,8 @@ XII-IPS,11,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-11
 XII-IPS,12,SBY/PKWU (Life Skill),FD-12
 XII-IPS,13,Basa Sunda (Muatan Lokal),FD-13
 XII-IPS,14,Informatika,FD-14
+XII-IPS,15,Al Quran,FD-U01
+XII-IPS,16,Hadis,FD-U02
+XII-IPS,17,Fikih,FD-U03
+XII-IPS,18,Bahasa Arab,FD-U04
+XII-IPS,19,Tahfidz,FD-U05
