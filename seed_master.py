@@ -60,7 +60,7 @@ def seed_full_day():
     if FULL_DAY_STUDENTS.exists():
         with FULL_DAY_STUDENTS.open(encoding="utf-8",newline="") as f:
             for r in csv.DictReader(f):
-                fd_key=f"FD-{r["kelas"].strip()}-{r.get("no","")}"
+                fd_key=f"FD-{r['kelas'].strip()}-{r.get('no','')}"
                 db.upsert_siswa(r.get("no",""),fd_key,r["nama"].strip(),"SMA-FULL-DAY",r["kelas"].strip(),"FULL_DAY",r.get("tahun_ajaran","2026/2027"))
     if FULL_DAY_SUBJECTS.exists():
         with FULL_DAY_SUBJECTS.open(encoding="utf-8",newline="") as f:
