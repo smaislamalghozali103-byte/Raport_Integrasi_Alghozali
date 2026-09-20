@@ -3,12 +3,19 @@ import bcrypt
 import pandas as pd
 import streamlit as st
 import database as db
+from pathlib import Path
+from seed_master import seed as seed_master_data
 from dotenv import load_dotenv
 from excel_utils import make_template, read_uploaded
 from pdf_report import build_report
 
 load_dotenv()
 db.init_db()
+if not db.q("SELECT id FROM siswa LIMIT 1") and Path("data/source_ts").exists():
+    try:
+        seed_master_data()
+    except Exception as exc:
+        st.session_state["seed_error"]=str(exc)
 st.set_page_config(page_title="Raport Integrasi Al-Ghozali",page_icon="🏫",layout="wide")
 
 st.markdown("""
