@@ -296,6 +296,76 @@ function handleRequest(e) {
     }
 
     // -----------------------------------------------------------------------
+    // 4B. MONITORING REALTIME (STATUS SAJA, TANPA ANGKA NILAI)
+    // -----------------------------------------------------------------------
+    if (action === 'getMonitoring') {
+      var monSheet = ss.getSheetByName('Dashboard_Monitoring');
+      var monRows = [];
+      if (monSheet && monSheet.getLastRow() >= 2) {
+        var monValues = monSheet.getDataRange().getValues();
+        var requestedUnit = String(params.unit || '').trim();
+        var requestedClass = String(params.kelas || '').trim();
+        for (var mr = 1; mr < monValues.length; mr++) {
+          var rowMon = monValues[mr];
+          var rowClass = String(rowMon[1] || '').trim();
+          if (requestedClass && rowClass !== requestedClass) continue;
+          monRows.push({
+            no: rowMon[0],
+            kelas: rowClass,
+            mapel: String(rowMon[2] || '').trim(),
+            guru: String(rowMon[3] || '').trim(),
+            total: Number(rowMon[4] || 0),
+            terisi: Number(rowMon[5] || 0),
+            status: String(rowMon[6] || '').trim(),
+            updatedAt: String(rowMon[7] || '').trim()
+          });
+        }
+      }
+      return jsonResponse({
+        status: 'success',
+        rows: monRows,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // -----------------------------------------------------------------------
+    // 4C. NILAI SATU KELAS (UNTUK WALI KELAS / ADMIN)
+    // -----------------------------------------------------------------------
+    if (action === 'getClassScores') {
+      var scoreSheet = ss.getSheetByName('Data_Nilai_Raport');
+      var scoreRows = [];
+      var reqClassId = String(params.classId || '').trim();
+      var reqClassName = String(params.className || '').trim();
+      if (scoreSheet && scoreSheet.getLastRow() >= 2) {
+        var scoreValues = scoreSheet.getDataRange().getValues();
+        for (var sr = 1; sr < scoreValues.length; sr++) {
+          var sv = scoreValues[sr];
+          var rowClassId = String(sv[1] || '').trim();
+          var rowStudent = String(sv[2] || '').trim();
+          var rowClassMatch = !reqClassId && !reqClassName;
+          if (reqClassId && rowClassId === reqClassId) rowClassMatch = true;
+          if (reqClassName && rowClassId === reqClassName) rowClassMatch = true;
+          if (rowClassMatch && String(sv[0] || '').trim()) {
+            scoreRows.push({
+              studentId: String(sv[0] || '').trim(),
+              classId: rowClassId,
+              studentName: rowStudent,
+              nisn: String(sv[3] || '').trim(),
+              subjectId: String(sv[4] || '').trim(),
+              score: sv[5] === '' ? null : Number(sv[5]),
+              updatedAt: String(sv[6] || '').trim()
+            });
+          }
+        }
+      }
+      return jsonResponse({
+        status: 'success',
+        rows: scoreRows,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // -----------------------------------------------------------------------
     // 4B. DAFTAR KELAS FULL DAY
     // -----------------------------------------------------------------------
     if (action === 'getFullDayClasses') {
