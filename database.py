@@ -115,7 +115,9 @@ def upsert_kurikulum_mapel(mapel_id,unit,kelas,urutan=0):
         con.execute('INSERT INTO kurikulum_mapel(mapel_id,unit,kelas,urutan) VALUES(?,?,?,?) ON CONFLICT(mapel_id,unit,kelas) DO UPDATE SET urutan=excluded.urutan',(mapel_id,unit,kelas,urutan))
 
 def display_unit(unit):
-    return 'SMA — FULL DAY' if unit=='SMA-FULL-DAY' else unit
+    if unit=='SMA-FULL-DAY': return 'SMA — FULL DAY'
+    if unit=='SMP-FULL-DAY': return 'SMP — FULL DAY'
+    return unit
 
 def get_mapel_for_guru(guru_id,unit):
     return q("""SELECT DISTINCT m.* FROM mapel m JOIN penugasan p ON p.mapel_id=m.id
