@@ -20,29 +20,59 @@ if needs_seed:
         st.session_state["seed_error"]=str(exc)
 st.set_page_config(page_title="Raport Integrasi Al-Ghozali",page_icon="🏫",layout="wide")
 
-st.markdown("""
-<style>
-.stApp{background:linear-gradient(180deg,#f8faf9,#eef7f1)}
-.block-container{max-width:1180px;padding-top:1rem}
-.brand{display:flex;align-items:center;gap:14px;padding:10px 0 20px}
-.brand-icon{width:54px;height:54px;border-radius:16px;background:#166534;color:white;display:flex;align-items:center;justify-content:center;font-size:25px}
-.brand h1{margin:0;color:#14532d;font-size:26px}.brand p{margin:2px 0;color:#64748b}
-div[data-testid="stMetric"]{background:#fff;border:1px solid #dbe7df;border-radius:16px;padding:12px}
-.stButton>button{border-radius:12px;font-weight:700;border:1px solid #d9e7df;box-shadow:0 5px 16px rgba(15,23,42,.05)}
-.section-card{background:rgba(255,255,255,.92);border:1px solid #dbe7df;border-radius:20px;padding:18px 20px;box-shadow:0 10px 30px rgba(15,23,42,.06);margin:10px 0 18px}
-.kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#64748b;font-weight:800}
-.big-number{font-size:32px;font-weight:800;color:#14532d}
-.status-pill{display:inline-block;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800}
+st.markdown("""<style>
+:root{--ag-green:#0b6b45;--ag-green2:#116b48;--ag-dark:#164e3b;--ag-gold:#c9a227;--ag-bg:#f5f8f6;--ag-border:#dfe9e3}
+.stApp{background:radial-gradient(circle at 20% 0%,#ffffff 0,#f7faf8 42%,#eef5f1 100%);color:#17352a}
+.block-container{max-width:1240px;padding:1.25rem 1.25rem 3rem}
+header[data-testid="stHeader"]{background:transparent}
+.brand-shell{display:flex;align-items:center;justify-content:space-between;gap:18px;background:rgba(255,255,255,.94);border:1px solid var(--ag-border);border-radius:20px;padding:14px 18px;box-shadow:0 12px 30px rgba(16,60,43,.07);margin-bottom:18px}
+.brand-left{display:flex;align-items:center;gap:14px}.brand-logo{width:64px;height:64px;object-fit:contain;border-radius:12px}.brand-fallback{width:64px;height:64px;border-radius:14px;background:linear-gradient(145deg,#f4f7d7,#d8ebc8);border:2px solid var(--ag-green);display:flex;align-items:center;justify-content:center;color:var(--ag-green);font-size:30px}
+.brand-title{font-size:25px;font-weight:900;letter-spacing:.01em;color:var(--ag-dark);margin:0}.brand-sub{font-size:14px;color:#64748b;margin-top:2px}
+.hero-card{background:rgba(255,255,255,.96);border:1px solid var(--ag-border);border-radius:24px;padding:28px;box-shadow:0 18px 50px rgba(16,60,43,.10)}
+.login-wrap{max-width:560px;margin:2vh auto}.login-logo{text-align:center}.login-logo img{width:108px;height:108px;object-fit:contain}.login-title{text-align:center;color:var(--ag-dark);font-size:30px;font-weight:900;margin:6px 0 0}.login-sub{text-align:center;color:#64748b;margin:4px 0 20px}
+.gold-rule{width:92px;height:3px;background:var(--ag-gold);margin:12px auto 20px;border-radius:99px}
+.stepper{display:flex;align-items:center;gap:8px;margin:4px 0 20px}.step{flex:1;display:flex;align-items:center;gap:8px;color:#64748b;font-size:12px;font-weight:800}.step b{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#e8efeb;color:#64748b}.step.active{color:var(--ag-dark)}.step.active b{background:var(--ag-green);color:white}.step.done b{background:#d9eee4;color:var(--ag-green)}
+.section-card{background:rgba(255,255,255,.96);border:1px solid var(--ag-border);border-radius:20px;padding:20px;box-shadow:0 12px 35px rgba(16,60,43,.07);margin:10px 0 18px}
+.info-strip{background:#edf8f1;border:1px solid #cce6d6;border-radius:12px;padding:11px 14px;color:#275b45;font-size:13px}
+.teacher-chip{background:#edf8f1;border:1px solid #cce6d6;border-radius:14px;padding:12px 16px;font-weight:800;color:var(--ag-dark)}
+.metric-card{background:#fff;border:1px solid var(--ag-border);border-radius:16px;padding:14px}
+.stButton>button{border-radius:11px;font-weight:800;border:1px solid #d6e4dc;min-height:42px}
+button[kind="primary"]{background:var(--ag-green)!important}
+div[data-testid="stTextInput"] input,div[data-testid="stNumberInput"] input{border-radius:10px}
+[data-testid="stDataFrame"]{border:1px solid var(--ag-border);border-radius:14px;overflow:hidden}
+.sidebar-brand{padding:8px 4px 18px;text-align:center}.sidebar-brand img{width:86px;height:86px;object-fit:contain}
+@media(max-width:760px){.brand-shell{padding:12px}.brand-title{font-size:20px}.hero-card{padding:18px}.step{font-size:10px}.step span{display:none}}
+</style>""",unsafe_allow_html=True)
 
-</style>
-""",unsafe_allow_html=True)
+def logo_path():
+    candidates=[
+        Path("assets/logo-alghozali.jpg"),
+        Path("assets/logo-alghozali.jpeg"),
+        Path("logo alg(3).jpg"),
+        Path("logo-alghozoli.jpg"),
+    ]
+    for p in candidates:
+        if p.exists(): return p
+    return None
+
+def logo_html(cls="brand-logo"):
+    p=logo_path()
+    if p:
+        import base64
+        mime="image/png" if p.suffix.lower()==".png" else "image/jpeg"
+        data=base64.b64encode(p.read_bytes()).decode()
+        return f'<img class="{cls}" src="data:{mime};base64,{data}" alt="Logo YPI Al-Ghozali">'
+    return '<div class="brand-fallback">✦</div>'
 
 def is_full_day(unit): return unit in {"SMA-FULL-DAY","SMP-FULL-DAY"}
 
 def jalur_label(unit): return "FULL DAY" if is_full_day(unit) else "MUKIM"
 
 def header():
-    st.markdown('<div class="brand"><div class="brand-icon">🏫</div><div><h1>RAPORT INTEGRASI</h1><p>Pondok Modern Al-Ghozali</p></div></div>',unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="brand-shell"><div class="brand-left">{logo_html()}<div><div class="brand-title">RAPORT INTEGRASI</div><div class="brand-sub">Pondok Modern Al-Ghozali</div></div></div></div>',
+        unsafe_allow_html=True
+    )
 
 def admin_ok(pin):
     h=os.getenv("ADMIN_PIN_HASH","").strip()
@@ -191,17 +221,17 @@ def wali_scores_ui(unit,kelas,tahun):
 
 def guru_page():
     header(); guru=st.session_state["guru"]; unit=st.session_state["unit"]; mapel=st.session_state["mapel"]
+    st.markdown('<div class="stepper"><div class="step done"><b>✓</b><span>Login Guru</span></div><div class="step done"><b>✓</b><span>Pilih Mapel</span></div><div class="step active"><b>3</b><span>Input Nilai</span></div></div>',unsafe_allow_html=True)
     top1,top2=st.columns([5,1])
-    top1.success(f"👤 {guru['nama']} • {jalur_label(unit)} • {mapel['nama']}")
+    top1.markdown(f'<div class="teacher-chip">👤 {guru["nama"]} &nbsp; • &nbsp; {jalur_label(unit)} &nbsp; • &nbsp; {mapel["nama"]}</div>',unsafe_allow_html=True)
     if top2.button("Keluar"): logout()
     tahun=st.text_input("Tahun Ajaran",value="2026/2027")
     classes=db.get_classes_for_guru_mapel(guru["id"],mapel["id"],unit)
-    st.subheader("Kelas yang Anda Ajar")
-    cols=st.columns(min(3,max(1,len(classes))))
+    st.markdown('<div class="section-card"><h3 style="color:#164e3b">✎ INPUT NILAI RAPORT</h3><div class="info-strip">💡 Pilih kelas. Daftar siswa dan kolom nilai akan muncul otomatis.</div></div>',unsafe_allow_html=True)
+    cols=st.columns(min(4,max(1,len(classes))))
     for i,r in enumerate(classes):
         with cols[i%len(cols)]:
-            if st.button(f"📚 {r['kelas']}",key=f"class_{r['kelas']}"):
-                st.session_state["kelas"]=r["kelas"]
+            if st.button(f"📚 {r['kelas']}",key=f"class_{r['kelas']}"): st.session_state["kelas"]=r["kelas"]
     if st.session_state.get("kelas"):
         grade_editor(unit,st.session_state["kelas"],mapel,guru,tahun)
     wali=db.get_wali_classes(guru["id"],unit,tahun)
@@ -211,73 +241,77 @@ def guru_page():
             c1,c2,c3=st.columns([4,1,1]); c1.write(f"**{w['kelas']}**")
             if c2.button("📈 Monitoring",key=f"wm_{w['kelas']}"): st.session_state["monitor_kelas"]=w["kelas"]
             if c3.button("📄 Raport",key=f"wr_{w['kelas']}"): st.session_state["raport_kelas"]=w["kelas"]
-    st.divider()
-    monitoring_cloud_ui(tahun,title="📊 Monitoring Input Nilai Seluruh Kelas")
+    st.divider(); monitoring_cloud_ui(tahun,title="📊 Monitoring Input Nilai Seluruh Kelas")
     if st.session_state.get("monitor_kelas"):
         k=st.session_state["monitor_kelas"]; st.divider()
-        monitoring_cloud_ui(tahun,unit,k,title=f"📈 Monitoring {k}")
-        wali_scores_ui(unit,k,tahun)
+        monitoring_cloud_ui(tahun,unit,k,title=f"📈 Monitoring {k}"); wali_scores_ui(unit,k,tahun)
     if st.session_state.get("raport_kelas"):
         st.divider(); raport_ui(unit,st.session_state["raport_kelas"],tahun)
 
-def login_page():
-    header()
-    left,right=st.columns(2)
-    with left:
-        st.subheader("👨‍🏫 LOGIN GURU")
-        units=db.get_units()
-        if not units:
-            st.warning("Master data belum dimuat. Jalankan seed_master.py setelah source_ts tersedia.")
-        else:
-            unit=st.selectbox("1. Jalur / Unit",units,format_func=db.display_unit)
-            gs=db.get_gurus(unit)
-            gm={g["nama"]:g for g in gs}
-            gn=st.selectbox("2. Nama Guru",list(gm) or ["Tidak ada guru"])
-            guru=gm.get(gn)
-            if guru:
-                maps=db.get_mapel_for_guru(guru["id"],unit)
-                mm={m["nama"]:m for m in maps}
-            else:
-                mm={}
-            mn=st.selectbox("3. Mata Pelajaran",list(mm) or ["Tidak ada mapel"])
-            pin_hash=db.get_guru_pin_hash(guru["id"]) if guru else None
-            if guru and not pin_hash:
-                st.info("🔑 Pendaftaran awal: buat PIN minimal 6 digit. PIN disimpan dalam bentuk hash.")
-                p1=st.text_input("Buat PIN Guru",type="password",max_chars=32)
-                p2=st.text_input("Ulangi PIN Guru",type="password",max_chars=32)
-                if st.button("🔐 DAFTARKAN PIN & MASUK",type="primary",use_container_width=True):
-                    if not p1.isdigit() or len(p1)<6:
-                        st.error("PIN harus berupa angka dan minimal 6 digit.")
-                    elif p1!=p2:
-                        st.error("Konfirmasi PIN tidak sama.")
-                    elif mn not in mm:
-                        st.warning("Pilih mata pelajaran terlebih dahulu.")
-                    else:
-                        db.set_guru_pin(guru["id"],bcrypt.hashpw(p1.encode(),bcrypt.gensalt()).decode())
-                        st.session_state.update(role="guru",guru=dict(guru),unit=unit,mapel=dict(mm[mn]))
-                        st.rerun()
-            elif guru:
-                pin=st.text_input("PIN Guru",type="password",max_chars=32)
-                if st.button("🚀 MASUK KE RAPORT",type="primary",use_container_width=True):
-                    valid=bool(pin_hash) and bcrypt.checkpw(pin.encode(),pin_hash.encode())
-                    if not valid:
-                        st.error("PIN Guru salah.")
-                    elif mn not in mm:
-                        st.warning("Pilih mata pelajaran terlebih dahulu.")
-                    else:
-                        st.session_state.update(role="guru",guru=dict(guru),unit=unit,mapel=dict(mm[mn]))
-                        st.rerun()
-    with right:
-        st.subheader("🔐 LOGIN ADMIN")
+
+    st.markdown('<div class="login-wrap"><div class="hero-card">'+logo_html("login-logo")+'<div class="login-title">RAPORT INTEGRASI</div><div class="login-sub">Pondok Modern Al-Ghozali</div><div class="gold-rule"></div><h3 style="text-align:center;color:#164e3b">LOGIN GURU</h3><p style="text-align:center;color:#64748b">Silakan masuk dengan nama guru dan PIN</p></div></div>',unsafe_allow_html=True)
+    units=db.get_units()
+    if not units:
+        st.warning("Master data belum dimuat. Jalankan seed_master.py setelah source_ts tersedia.")
+        return
+    with st.container():
+        st.markdown('<div class="hero-card">',unsafe_allow_html=True)
+        unit=st.selectbox("Jalur / Unit",units,format_func=db.display_unit)
+        gs=db.get_gurus(unit); gm={g["nama"]:g for g in gs}
+        gn=st.selectbox("Nama Guru",list(gm) or ["Tidak ada guru"])
+        guru=gm.get(gn)
+        pin_hash=db.get_guru_pin_hash(guru["id"]) if guru else None
+        if guru and not pin_hash:
+            st.markdown('<div class="info-strip">🔑 Pendaftaran awal: buat PIN minimal 6 digit. PIN disimpan dalam bentuk hash.</div>',unsafe_allow_html=True)
+            p1=st.text_input("Buat PIN Guru",type="password",max_chars=32)
+            p2=st.text_input("Ulangi PIN Guru",type="password",max_chars=32)
+            if st.button("🔐 DAFTARKAN PIN & MASUK",type="primary",use_container_width=True):
+                if not p1.isdigit() or len(p1)<6: st.error("PIN harus berupa angka dan minimal 6 digit.")
+                elif p1!=p2: st.error("Konfirmasi PIN tidak sama.")
+                else:
+                    db.set_guru_pin(guru["id"],bcrypt.hashpw(p1.encode(),bcrypt.gensalt()).decode())
+                    st.session_state.update(role="guru",guru=dict(guru),unit=unit)
+                    st.rerun()
+        elif guru:
+            pin=st.text_input("PIN Guru",type="password",max_chars=32)
+            if st.button("↪ MASUK",type="primary",use_container_width=True):
+                if not (pin_hash and bcrypt.checkpw(pin.encode(),pin_hash.encode())):
+                    st.error("PIN Guru salah.")
+                else:
+                    st.session_state.update(role="guru",guru=dict(guru),unit=unit)
+                    st.rerun()
+        st.markdown('</div>',unsafe_allow_html=True)
+    st.markdown('<div style="max-width:560px;margin:10px auto 0">',unsafe_allow_html=True)
+    with st.expander("🔐 LOGIN ADMIN"):
         st.caption("PIN Admin terpisah dari PIN Guru.")
         pin=st.text_input("PIN Admin",type="password",key="admin_login_pin")
         if st.button("MASUK ADMIN",use_container_width=True):
             if admin_ok(pin):
-                st.session_state["role"]="admin"
-                st.rerun()
-            else:
-                st.error("PIN Admin salah atau belum dikonfigurasi.")
-        st.info("Admin mengelola master, monitoring, rekap, raport, dan sinkronisasi.")
+                st.session_state["role"]="admin"; st.rerun()
+            else: st.error("PIN Admin salah atau belum dikonfigurasi.")
+    st.markdown('</div>',unsafe_allow_html=True)
+
+def subject_page():
+    header()
+    guru=st.session_state["guru"]; unit=st.session_state["unit"]
+    st.markdown('<div class="stepper"><div class="step done"><b>✓</b><span>Login Guru</span></div><div class="step active"><b>2</b><span>Pilih Mata Pelajaran</span></div><div class="step"><b>3</b><span>Input Nilai</span></div></div>',unsafe_allow_html=True)
+    st.markdown('<div class="hero-card">',unsafe_allow_html=True)
+    st.markdown('<h2 style="color:#164e3b">📚 PILIH MATA PELAJARAN</h2>',unsafe_allow_html=True)
+    st.markdown(f'<div class="teacher-chip">👤 {guru["nama"]} &nbsp; • &nbsp; {db.display_unit(unit)}</div>',unsafe_allow_html=True)
+    maps=db.get_mapel_for_guru(guru["id"],unit)
+    mm={m["nama"]:m for m in maps}
+    if not mm:
+        st.warning("Belum ada mata pelajaran yang ditugaskan kepada guru ini.")
+    else:
+        mn=st.selectbox("Mata Pelajaran",list(mm),key="subject_choice")
+        st.markdown('<div class="info-strip">💡 Pilih mata pelajaran yang akan diinput nilainya. Kelas yang tersedia akan mengikuti penugasan guru.</div>',unsafe_allow_html=True)
+        a,b=st.columns(2)
+        with a:
+            if st.button("← Kembali",use_container_width=True): logout()
+        with b:
+            if st.button("LANJUTKAN →",type="primary",use_container_width=True):
+                st.session_state["mapel"]=dict(mm[mn]); st.session_state["role"]="guru_input"; st.rerun()
+    st.markdown('</div>',unsafe_allow_html=True)
 
 def admin_page():
     header()
@@ -358,7 +392,8 @@ def admin_page():
 
 def main():
     role=st.session_state.get("role")
-    if role=="guru": guru_page()
+    if role=="guru_input": guru_page()
+    elif role=="guru": subject_page()
     elif role=="admin": admin_page()
     else: login_page()
 
