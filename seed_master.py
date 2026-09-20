@@ -1,9 +1,12 @@
 import re
 from pathlib import Path
 from collections import defaultdict
+import csv
 import database as db
 
 ROOT=Path(__file__).parent/"data"/"source_ts"
+FULL_DAY_STUDENTS=Path(__file__).parent/"data"/"full_day_students.csv"
+FULL_DAY_SUBJECTS=Path(__file__).parent/"data"/"full_day_subjects.csv"
 
 def read(name):
     return (ROOT/name).read_text(encoding="utf-8")
@@ -65,7 +68,7 @@ def seed():
             unit="INTENSIF"
         else:
             unit="SMA"
-        db.upsert_siswa("",r["nisn"],r["nama"],unit,r["class_id"])
+        db.upsert_siswa("",r["nisn"],r["nama"],unit,r["class_id"],"MUKIM","2026/2027")
     for code,name,unit in parse_subjects():
         db.upsert_mapel(code,name,unit)
     for (teacher,unit,subject,kelas),hours in grouped.items():
