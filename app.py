@@ -300,14 +300,6 @@ def admin_page():
         units=db.get_units()
         if units:
             unit=st.selectbox("Unit",units,key="admin_mon_unit")
-            classes=sorted({x["kelas"] for x in db.q("SELECT DISTINCT kelas FROM siswa WHERE unit=?",(unit,))})
-            if classes:
-                kelas=st.selectbox("Kelas",classes,key="admin_mon_kelas")
-                st.dataframe(pd.DataFrame([dict(x) for x in db.monitoring(unit,kelas,tahun)]),use_container_width=True,hide_index=True)
-    with tabs[6]:
-        units=db.get_units()
-        if units:
-            unit=st.selectbox("Unit",units,key="admin_mon_unit")
             monitoring_cloud_ui(tahun,unit,title=f"📈 Monitoring Realtime {db.display_unit(unit)}")
     with tabs[7]:
         units=db.get_units()
