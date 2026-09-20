@@ -78,6 +78,11 @@ def init_db():
         cols={r["name"] for r in con.execute("PRAGMA table_info(guru)").fetchall()}
         if "pin_hash" not in cols:
             con.execute("ALTER TABLE guru ADD COLUMN pin_hash TEXT")
+        cols={r["name"] for r in con.execute("PRAGMA table_info(siswa)").fetchall()}
+        if "jalur" not in cols: con.execute("ALTER TABLE siswa ADD COLUMN jalur TEXT DEFAULT 'MUKIM'")
+        if "tahun_ajaran" not in cols: con.execute("ALTER TABLE siswa ADD COLUMN tahun_ajaran TEXT DEFAULT '2026/2027'")
+        con.execute("UPDATE siswa SET jalur='MUKIM' WHERE jalur IS NULL OR trim(jalur)=''")
+        con.execute("UPDATE siswa SET tahun_ajaran='2026/2027' WHERE tahun_ajaran IS NULL OR trim(tahun_ajaran)=''")
 
 def q(sql,params=()):
     with connect() as con: return con.execute(sql,params).fetchall()
