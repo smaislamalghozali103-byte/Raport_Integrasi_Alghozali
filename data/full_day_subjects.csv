@@ -1,0 +1,73 @@
+kelas,no,nama_mapel,kode_mapel
+X,1,Pendidikan Agama dan Budi Pekerti,FD-01
+X,2,Pendidikan Pancasila,FD-02
+X,3,Bahasa Indonesia,FD-03
+X,4,Matematika,FD-04
+X,5,Sejarah,FD-05
+X,6,Bahasa Inggris,FD-06
+X,7,Fisika,FD-07
+X,8,Kimia,FD-08
+X,9,Biologi,FD-09
+X,10,Ekonomi,FD-10
+X,11,Geografi,FD-11
+X,12,Sosiologi,FD-12
+X,13,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-13
+X,14,SBY/PKWU (Life Skill),FD-14
+X,15,Basa Sunda (Muatan Lokal),FD-15
+X,16,Informatika,FD-16
+XI-IPA,1,Pendidikan Agama dan Budi Pekerti (PAI),FD-01
+XI-IPA,2,Pendidikan Pancasila dan Kewarganegaraan,FD-02
+XI-IPA,3,Bahasa Indonesia,FD-03
+XI-IPA,4,Matematika,FD-04
+XI-IPA,5,Sejarah Indonesia,FD-05
+XI-IPA,6,Bahasa Inggris,FD-06
+XI-IPA,7,Fisika,FD-07
+XI-IPA,8,Kimia,FD-08
+XI-IPA,9,Biologi,FD-09
+XI-IPA,10,Matematika Tingkat Lanjut,FD-10
+XI-IPA,11,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-11
+XI-IPA,12,SBY/PKWU (Life Skill),FD-12
+XI-IPA,13,Basa Sunda (Muatan Lokal),FD-13
+XI-IPA,14,Informatika,FD-14
+XI-IPS,1,Pendidikan Agama dan Budi Pekerti (PAI),FD-01
+XI-IPS,2,Pendidikan Pancasila dan Kewarganegaraan,FD-02
+XI-IPS,3,Bahasa Indonesia,FD-03
+XI-IPS,4,Matematika,FD-04
+XI-IPS,5,Sejarah Indonesia,FD-05
+XI-IPS,6,Bahasa Inggris,FD-06
+XI-IPS,7,Ekonomi,FD-07
+XI-IPS,8,Geografi,FD-08
+XI-IPS,9,Sosiologi,FD-09
+XI-IPS,10,Antropologi,FD-10
+XI-IPS,11,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-11
+XI-IPS,12,SBY/PKWU (Life Skill),FD-12
+XI-IPS,13,Basa Sunda (Muatan Lokal),FD-13
+XI-IPS,14,Informatika,FD-14
+XII-IPA,1,Pendidikan Agama dan Budi Pekerti (PAI),FD-01
+XII-IPA,2,Pendidikan Pancasila dan Kewarganegaraan,FD-02
+XII-IPA,3,Bahasa Indonesia,FD-03
+XII-IPA,4,Matematika,FD-04
+XII-IPA,5,Sejarah Indonesia,FD-05
+XII-IPA,6,Bahasa Inggris,FD-06
+XII-IPA,7,Fisika,FD-07
+XII-IPA,8,Kimia,FD-08
+XII-IPA,9,Biologi,FD-09
+XII-IPA,10,Matematika Tingkat Lanjut (MTK TL),FD-10
+XII-IPA,11,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-11
+XII-IPA,12,SBY/PKWU (Life Skill),FD-12
+XII-IPA,13,Basa Sunda (Muatan Lokal),FD-13
+XII-IPA,14,Informatika,FD-14
+XII-IPS,1,Pendidikan Agama dan Budi Pekerti (PAI),FD-01
+XII-IPS,2,Pendidikan Pancasila dan Kewarganegaraan,FD-02
+XII-IPS,3,Bahasa Indonesia,FD-03
+XII-IPS,4,Matematika,FD-04
+XII-IPS,5,Sejarah Indonesia,FD-05
+XII-IPS,6,Bahasa Inggris,FD-06
+XII-IPS,7,Ekonomi,FD-07
+XII-IPS,8,Geografi,FD-08
+XII-IPS,9,Sosiologi,FD-09
+XII-IPS,10,Antropologi,FD-10
+XII-IPS,11,"Pendidikan Jasmani, Olahragaa dan Kesehatan (PJOK)",FD-11
+XII-IPS,12,SBY/PKWU (Life Skill),FD-12
+XII-IPS,13,Basa Sunda (Muatan Lokal),FD-13
+XII-IPS,14,Informatika,FD-14
